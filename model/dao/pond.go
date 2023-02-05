@@ -1,6 +1,10 @@
 package dao
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 // create table `ponds` (
 // 	`id` bigint unsigned not null auto_increment,
@@ -33,13 +37,13 @@ type (
 		Long  float64 `gorm:"not null"`
 		Depth float64 `gorm:"not null"`
 
-		CreatedAt   time.Time  `gorm:"not null"`
-		UpdatedAt   time.Time  `gorm:"not null"`
-		DeletedAt   *time.Time `gorm:"null"`
-		CreatedBy   string     `gorm:"not null"`
-		UpdatedBy   string     `gorm:"not null"`
-		DeletedBy   *string    `gorm:"null"`
-		DeletedUnix int        `gorm:"not null"`
+		CreatedAt   time.Time      `gorm:"not null"`
+		UpdatedAt   time.Time      `gorm:"not null"`
+		DeletedAt   gorm.DeletedAt `gorm:"null"`
+		CreatedBy   string         `gorm:"not null"`
+		UpdatedBy   string         `gorm:"not null"`
+		DeletedBy   *string        `gorm:"null"`
+		DeletedUnix int            `gorm:"not null"`
 
 		Farm Farm `gorm:"foreignKey:ID;references:FarmID"`
 	}

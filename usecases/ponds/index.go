@@ -14,6 +14,7 @@ type (
 	Usecases interface {
 		Create(ctx context.Context, req dto.CreatePondRequest) (dao.Pond, error)
 		DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error
+		GetByID(ctx context.Context, id uint64) (dao.Pond, error)
 	}
 
 	usecases struct {

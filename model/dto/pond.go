@@ -37,6 +37,8 @@ type (
 		UpdatedAt time.Time `json:"updatedAt"`
 		CreatedBy string    `json:"createdBy"`
 		UpdatedBy string    `json:"updatedBy"`
+
+		Farm FarmResponse `json:"farm,omitempty"`
 	}
 )
 
@@ -87,5 +89,7 @@ func NewPondResponse(pond dao.Pond) PondResponse {
 		UpdatedAt: pond.UpdatedAt,
 		CreatedBy: pond.CreatedBy,
 		UpdatedBy: pond.UpdatedBy,
+
+		Farm: NewFarmResponse(pond.Farm),
 	}
 }

@@ -1,6 +1,10 @@
 package dao
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Farm struct {
 	ID          uint64 `gorm:"primaryKey"`
@@ -17,13 +21,13 @@ type Farm struct {
 	Latitude  *float64 `gorm:"null"`
 	Longitude *float64 `gorm:"null"`
 
-	CreatedAt   time.Time  `gorm:"not null"`
-	UpdatedAt   time.Time  `gorm:"not null"`
-	DeletedAt   *time.Time `gorm:"null"`
-	CreatedBy   string     `gorm:"not null"`
-	UpdatedBy   string     `gorm:"not null"`
-	DeletedBy   *string    `gorm:"null"`
-	DeletedUnix int        `gorm:"not null"`
+	CreatedAt   time.Time      `gorm:"not null"`
+	UpdatedAt   time.Time      `gorm:"not null"`
+	DeletedAt   gorm.DeletedAt `gorm:"null"`
+	CreatedBy   string         `gorm:"not null"`
+	UpdatedBy   string         `gorm:"not null"`
+	DeletedBy   *string        `gorm:"null"`
+	DeletedUnix int            `gorm:"not null"`
 
 	Ponds Ponds `gorm:"foreignKey:FarmID;references:ID"`
 }

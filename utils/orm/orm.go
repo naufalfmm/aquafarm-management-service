@@ -9,8 +9,9 @@ import (
 )
 
 type orm struct {
-	g    *gorm.DB
-	name string
+	g           *gorm.DB
+	name        string
+	preloadOpts PreloadOpts
 }
 
 func NewOrm(g *gorm.DB, name string) (orm, error) {
@@ -22,8 +23,9 @@ func NewOrm(g *gorm.DB, name string) (orm, error) {
 
 func (o *orm) newImpl(g *gorm.DB) *orm {
 	return &orm{
-		g:    g,
-		name: o.name,
+		g:           g,
+		name:        o.name,
+		preloadOpts: o.preloadOpts,
 	}
 }
 
@@ -33,6 +35,11 @@ func (o *orm) Gorm() *gorm.DB {
 
 func (o *orm) Error() error {
 	return o.g.Error
+}
+
+func (o *orm) SetPreloads(opts PreloadOpts) Orm {
+	o.preloadOpts = opts
+	return o
 }
 
 func (o *orm) AddError(err error) error {
@@ -267,6 +274,12 @@ func (o *orm) Table(name string, args ...interface{}) Orm {
 }
 
 func (o *orm) Take(dest interface{}, conds ...interface{}) Orm {
+	if len(o.preloadOpts) > 0 {
+		for _, opt := range o.preloadOpts {
+			o.Preload(opt.Query, opt.Args...)
+		}
+	}
+
 	return o.newImpl(o.g.Take(dest, conds...))
 }
 
