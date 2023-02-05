@@ -38,7 +38,7 @@ type (
 		CreatedBy string    `json:"createdBy"`
 		UpdatedBy string    `json:"updatedBy"`
 
-		Farm FarmResponse `json:"farm,omitempty"`
+		Farm *FarmResponse `json:"farm,omitempty"`
 	}
 )
 
@@ -75,7 +75,7 @@ func (req CreatePondRequest) ToPond() dao.Pond {
 }
 
 func NewPondResponse(pond dao.Pond) PondResponse {
-	return PondResponse{
+	resp := PondResponse{
 		ID:          pond.ID,
 		FarmID:      pond.FarmID,
 		Code:        pond.Code,
@@ -89,7 +89,12 @@ func NewPondResponse(pond dao.Pond) PondResponse {
 		UpdatedAt: pond.UpdatedAt,
 		CreatedBy: pond.CreatedBy,
 		UpdatedBy: pond.UpdatedBy,
-
-		Farm: NewFarmResponse(pond.Farm),
 	}
+
+	if pond.Farm.ID != 0 {
+		farm := NewFarmResponse(pond.Farm)
+		resp.Farm = &farm
+	}
+
+	return resp
 }

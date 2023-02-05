@@ -8,11 +8,7 @@ import (
 )
 
 func (u usecases) GetByID(ctx context.Context, id uint64) (dao.Pond, error) {
-	u.resources.MySql.SetPreloads(orm.PreloadOpts{
-		{
-			Query: "Farm",
-		},
-	})
+	u.resources.MySql.SetPreloads(orm.SetPreload("Farm"))
 
 	return u.persistents.Repositories.Ponds.GetByID(ctx, id)
 }

@@ -11,7 +11,7 @@ import (
 type orm struct {
 	g           *gorm.DB
 	name        string
-	preloadOpts PreloadOpts
+	preloadOpts preloadOpts
 }
 
 func NewOrm(g *gorm.DB, name string) (orm, error) {
@@ -37,8 +37,12 @@ func (o *orm) Error() error {
 	return o.g.Error
 }
 
-func (o *orm) SetPreloads(opts PreloadOpts) Orm {
-	o.preloadOpts = opts
+func (o *orm) SetPreloads(opts ...preloadOpt) Orm {
+	o.preloadOpts = make(preloadOpts, len(opts))
+	for i, opt := range opts {
+		o.preloadOpts[i] = opt
+	}
+
 	return o
 }
 
@@ -276,7 +280,7 @@ func (o *orm) Table(name string, args ...interface{}) Orm {
 func (o *orm) Take(dest interface{}, conds ...interface{}) Orm {
 	if len(o.preloadOpts) > 0 {
 		for _, opt := range o.preloadOpts {
-			o.Preload(opt.Query, opt.Args...)
+			o.Preload(opt.query, opt.args...)
 		}
 	}
 
