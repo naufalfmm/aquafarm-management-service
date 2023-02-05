@@ -1,4 +1,4 @@
-package farmsRepositories
+package pondsRepositories
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 
 type (
 	Repositories interface {
-		Create(ctx context.Context, farm dao.Farm) (dao.Farm, error)
+		Create(ctx context.Context, pond dao.Pond) (dao.Pond, error)
 	}
 
 	repositories struct {

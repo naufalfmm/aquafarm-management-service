@@ -24,6 +24,8 @@ type Farm struct {
 	UpdatedBy   string     `gorm:"not null"`
 	DeletedBy   *string    `gorm:"null"`
 	DeletedUnix int        `gorm:"not null"`
+
+	Ponds Ponds `gorm:"foreignKey:FarmID;references:ID"`
 }
 
 func (f Farm) TableName() string {
