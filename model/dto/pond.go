@@ -40,6 +40,8 @@ type (
 
 		Farm *FarmResponse `json:"farm,omitempty"`
 	}
+
+	PondResponses []PondResponse
 )
 
 func (req *CreatePondRequest) FromEchoContext(ec echo.Context) error {
@@ -97,4 +99,13 @@ func NewPondResponse(pond dao.Pond) PondResponse {
 	}
 
 	return resp
+}
+
+func NewPondResponses(ponds dao.Ponds) PondResponses {
+	resps := make(PondResponses, len(ponds))
+	for i, pond := range ponds {
+		resps[i] = NewPondResponse(pond)
+	}
+
+	return resps
 }

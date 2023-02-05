@@ -14,6 +14,7 @@ type (
 	Usecases interface {
 		Create(ctx context.Context, req dto.CreateFarmRequest) (dao.Farm, error)
 		DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error
+		GetByID(ctx context.Context, id uint64) (dao.Farm, error)
 	}
 
 	usecases struct {
