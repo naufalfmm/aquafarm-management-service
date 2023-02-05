@@ -9,17 +9,22 @@ import (
 )
 
 type orm struct {
-	g *gorm.DB
+	g    *gorm.DB
+	name string
 }
 
-func NewOrm(g *gorm.DB) (orm, error) {
+func NewOrm(g *gorm.DB, name string) (orm, error) {
 	return orm{
-		g: g,
+		g:    g,
+		name: name,
 	}, nil
 }
 
 func (o *orm) newImpl(g *gorm.DB) *orm {
-	return &orm{g}
+	return &orm{
+		g:    g,
+		name: o.name,
+	}
 }
 
 func (o *orm) Gorm() *gorm.DB {
