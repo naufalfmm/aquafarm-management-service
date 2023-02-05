@@ -7,11 +7,13 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/model/dto"
 	"github.com/naufalfmm/aquafarm-management-service/persistents"
 	"github.com/naufalfmm/aquafarm-management-service/resources"
+	"github.com/naufalfmm/aquafarm-management-service/utils/token"
 )
 
 type (
 	Usecases interface {
 		Create(ctx context.Context, req dto.CreateFarmRequest) (dao.Farm, error)
+		DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error
 	}
 
 	usecases struct {
