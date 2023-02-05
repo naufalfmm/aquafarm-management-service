@@ -2,12 +2,16 @@ module github.com/naufalfmm/aquafarm-management-service
 
 go 1.19
 
+require gorm.io/driver/mysql v1.4.5
+
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.4 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joho/godotenv v1.5.0 // indirect
 	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/labstack/echo/v4 v4.10.0 // indirect

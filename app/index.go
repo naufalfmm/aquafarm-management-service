@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -60,7 +61,18 @@ func (app App) Run() {
 	app.Ec.Use(app.Middlewares.PanicRecover(), app.Middlewares.ImplementCors())
 	app.Ec.Validator = app.Resources.Validator
 
+	app.Ec.GET("/", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, generateResp.Default{
+			Ok:      true,
+			Message: fmt.Sprintf("Welcome to %s", app.Resources.Config.ServiceName),
+		})
+	})
+
 	echo.NotFoundHandler = func(c echo.Context) error {
 		return generateResp.NewJSONResponse(c, http.StatusNotFound, "", consts.ErrPathNotFound)
+	}
+
+	if err := app.Ec.Start(fmt.Sprintf(":%d", app.Resources.Config.ServicePort)); err != nil {
+		panic(err)
 	}
 }

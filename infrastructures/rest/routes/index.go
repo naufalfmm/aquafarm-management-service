@@ -27,4 +27,8 @@ func Init(usec usecases.Usecases, res resources.Resources, middlewares middlewar
 
 func (r *Routes) Register(ec *echo.Echo) {
 	ec.Pre(r.Middlewares.RemoveTrailingSlash())
+	v1 := ec.Group("/v1")
+
+	farm := v1.Group("/farms", r.Middlewares.VerifyToken())
+	farm.POST("", r.Controllers.Farms.Create)
 }

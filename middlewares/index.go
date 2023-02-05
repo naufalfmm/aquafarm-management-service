@@ -10,6 +10,7 @@ type (
 		RemoveTrailingSlash() echo.MiddlewareFunc
 		PanicRecover() echo.MiddlewareFunc
 		ImplementCors() echo.MiddlewareFunc
+		VerifyToken() echo.MiddlewareFunc
 	}
 
 	middlewares struct {
