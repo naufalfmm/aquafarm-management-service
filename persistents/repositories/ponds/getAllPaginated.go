@@ -1,4 +1,4 @@
-package farmsRepositories
+package pondsRepositories
 
 import (
 	"context"
@@ -8,10 +8,10 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 )
 
-func (r repositories) GetAllPaginated(ctx context.Context, req dto.FarmPagingRequest) (dao.FarmsPagingResponse, error) {
+func (r repositories) GetAllPaginated(ctx context.Context, req dto.PondPagingRequest) (dao.PondsPagingResponse, error) {
 	var (
 		basePagingResp orm.BasePagingResponse
-		farms          dao.Farms
+		ponds          dao.Ponds
 
 		sortMap = map[string][]string{
 			"code":        {"code"},
@@ -20,16 +20,16 @@ func (r repositories) GetAllPaginated(ctx context.Context, req dto.FarmPagingReq
 	)
 
 	if err := req.Filter.Apply(r.resources.MySql.GetDB().WithContext(ctx)).
-		Model(&dao.Farm{}).
+		Model(&dao.Pond{}).
 		Paginate(ctx, orm.PaginateOptions{
 			Paging:       req.PagingRequest,
 			FieldSortMap: sortMap,
-		}, &basePagingResp, &farms).Error(); err != nil {
-		return dao.FarmsPagingResponse{}, err
+		}, &basePagingResp, &ponds).Error(); err != nil {
+		return dao.PondsPagingResponse{}, err
 	}
 
-	return dao.FarmsPagingResponse{
+	return dao.PondsPagingResponse{
 		BasePagingResponse: basePagingResp,
-		Items:              farms,
+		Items:              ponds,
 	}, nil
 }

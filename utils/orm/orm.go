@@ -125,6 +125,12 @@ func (o *orm) Exec(sql string, values ...interface{}) Orm {
 }
 
 func (o *orm) Find(dest interface{}, conds ...interface{}) Orm {
+	if len(o.preloadOpts) > 0 {
+		for _, opt := range o.preloadOpts {
+			o.Preload(opt.query, opt.args...)
+		}
+	}
+
 	return o.newImpl(o.g.Find(dest, conds...))
 }
 

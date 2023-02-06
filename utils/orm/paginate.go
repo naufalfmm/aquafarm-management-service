@@ -128,7 +128,11 @@ func (o orm) sort(sorts []string, fieldSortMap map[string][]string) (string, []s
 		validSorts = append(validSorts, sort)
 	}
 
-	return sortQuery[1:], validSorts
+	if len(sortQuery) > 0 {
+		sortQuery = sortQuery[1:]
+	}
+
+	return sortQuery, validSorts
 }
 
 func (o *orm) Paginate(ctx context.Context, options PaginateOptions, pagingResp *BasePagingResponse, data interface{}) Orm {

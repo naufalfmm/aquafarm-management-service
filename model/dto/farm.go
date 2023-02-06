@@ -111,27 +111,27 @@ func (req CreateFarmRequest) ToFarm() dao.Farm {
 
 func (filter ListFarmFilterRequest) Apply(o orm.Orm) orm.Orm {
 	if filter.Code != "" {
-		o = o.Where("farms.code", filter.Code)
+		o = o.Where("farms.code LIKE ?", "%"+filter.Code+"%")
 	}
 
 	if filter.Village != "" {
-		o = o.Where("farms.village", filter.Village)
+		o = o.Where("farms.village LIKE ?", "%"+filter.Village+"%")
 	}
 
 	if filter.District != "" {
-		o = o.Where("farms.district", filter.District)
+		o = o.Where("farms.district LIKE ?", "%"+filter.District+"%")
 	}
 
 	if filter.City != "" {
-		o = o.Where("farms.city", filter.City)
+		o = o.Where("farms.city LIKE ?", "%"+filter.City+"%")
 	}
 
 	if filter.Province != "" {
-		o = o.Where("farms.province", filter.Province)
+		o = o.Where("farms.province LIKE ?", "%"+filter.Province+"%")
 	}
 
 	if filter.PostalCode != "" {
-		o = o.Where("farms.postal_code", filter.PostalCode)
+		o = o.Where("farms.postal_code LIKE ?", "%"+filter.PostalCode+"%")
 	}
 
 	if filter.CreatedDateStart != nil && filter.CreatedDateEnd != nil {

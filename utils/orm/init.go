@@ -7,7 +7,6 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/consts"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 type MySqlConfig struct {
@@ -27,9 +26,7 @@ func (c MySqlConfig) generateURI() string {
 }
 
 func NewMysql(config MySqlConfig) (Orm, error) {
-	db, err := gorm.Open(mysql.Open(config.generateURI()), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	db, err := gorm.Open(mysql.Open(config.generateURI()), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
+	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 	"github.com/naufalfmm/aquafarm-management-service/utils/token"
 )
 
@@ -21,6 +22,21 @@ type (
 		Depth float64 `json:"depth" validate:"required"`
 
 		LoginData token.Data `validate:"dive,required"`
+	}
+
+	ListPondFilterRequest struct {
+		Code             string     `query:"code"`
+		VolumeStart      float64    `query:"volumeStart"`
+		VolumeEnd        float64    `query:"volumeEnd"`
+		AreaStart        float64    `query:"areaStart"`
+		AreaEnd          float64    `query:"areaEnd"`
+		CreatedDateStart *time.Time `query:"createdDateStart"`
+		CreatedDateEnd   *time.Time `query:"createdDateEnd"`
+	}
+
+	PondPagingRequest struct {
+		orm.PagingRequest
+		Filter ListPondFilterRequest
 	}
 
 	PondResponse struct {
@@ -42,6 +58,11 @@ type (
 	}
 
 	PondResponses []PondResponse
+
+	PondPagingResponse struct {
+		orm.BasePagingResponse
+		Items PondResponses `json:"items"`
+	}
 )
 
 func (req *CreatePondRequest) FromEchoContext(ec echo.Context) error {
@@ -76,6 +97,52 @@ func (req CreatePondRequest) ToPond() dao.Pond {
 	}
 }
 
+func (filter ListPondFilterRequest) Apply(o orm.Orm) orm.Orm {
+	if filter.Code != "" {
+		o = o.Where("farms.code LIKE ?", "%"+filter.Code+"%")
+	}
+
+	if filter.VolumeStart != 0 && filter.VolumeEnd == 0 {
+		o = o.Where("(farms.wide * farms.long) >= ?", filter.VolumeStart)
+	}
+
+	if filter.VolumeStart == 0 && filter.VolumeEnd != 0 {
+		o = o.Where("(farms.wide * farms.long) <= ?", filter.VolumeEnd)
+	}
+
+	if filter.VolumeStart != 0 && filter.VolumeEnd != 0 {
+		o = o.Where("(farms.wide * farms.long) BETWEEN ? AND ?", filter.VolumeStart, filter.VolumeEnd)
+	}
+
+	if filter.AreaStart != 0 && filter.AreaEnd == 0 {
+		o = o.Where("(farms.wide * farms.long * farms.depth) >= ?", filter.AreaStart)
+	}
+
+	if filter.AreaStart == 0 && filter.AreaEnd != 0 {
+		o = o.Where("(farms.wide * farms.long * farms.depth) <= ?", filter.AreaEnd)
+	}
+
+	if filter.AreaStart != 0 && filter.AreaEnd != 0 {
+		o = o.Where("(farms.wide * farms.long * farms.depth) BETWEEN ? AND ?", filter.AreaStart, filter.AreaEnd)
+	}
+
+	if filter.CreatedDateStart != nil && filter.CreatedDateEnd != nil {
+		o = o.Where("farms.created_at BETWEEN ? AND ?", *filter.CreatedDateStart, *filter.CreatedDateEnd)
+	}
+
+	return o
+}
+
+func (req *PondPagingRequest) FromEchoContext(ec echo.Context) error {
+	req.PagingRequest = orm.NewPagingRequest(ec, []string{"createdDate"})
+
+	if err := ec.Bind(&req.Filter); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewPondResponse(pond dao.Pond) PondResponse {
 	resp := PondResponse{
 		ID:          pond.ID,
@@ -108,4 +175,11 @@ func NewPondResponses(ponds dao.Ponds) PondResponses {
 	}
 
 	return resps
+}
+
+func NewPondPagingResponse(pondPaging dao.PondsPagingResponse) PondPagingResponse {
+	return PondPagingResponse{
+		BasePagingResponse: pondPaging.BasePagingResponse,
+		Items:              NewPondResponses(pondPaging.Items),
+	}
 }
