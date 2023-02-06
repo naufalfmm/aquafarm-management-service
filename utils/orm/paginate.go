@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
+
+	"github.com/labstack/echo/v4"
 )
 
 type (
@@ -27,6 +30,42 @@ type (
 		Sorts       []string `json:"sorts"`
 	}
 )
+
+func getQueryParamWithDefault(ec echo.Context, paramKey string, defaultVal int) int {
+	var (
+		queryValInt int
+	)
+
+	queryVal := ec.QueryParam(paramKey)
+
+	queryValInt, err := strconv.Atoi(queryVal)
+	if err != nil {
+		queryValInt = defaultVal
+	}
+
+	return queryValInt
+}
+
+func getSortQueryParam(ec echo.Context, defaultSorts []string) []string {
+	queryVals := strings.Split(ec.QueryParam("sorts"), ",")
+	if len(queryVals) == 0 {
+		return defaultSorts
+	}
+
+	for i, queryVal := range queryVals {
+		queryVals[i] = strings.TrimSpace(queryVal)
+	}
+
+	return queryVals
+}
+
+func NewPagingRequest(ec echo.Context, defaultSorts []string) PagingRequest {
+	return PagingRequest{
+		Page:  getQueryParamWithDefault(ec, "page", 1),
+		Limit: getQueryParamWithDefault(ec, "limit", 100),
+		Sorts: getSortQueryParam(ec, defaultSorts),
+	}
+}
 
 func calculateTotalPages(dataTotalCount, limit int) int {
 	totalPagesInFloat := float64(dataTotalCount) / float64(limit)
@@ -54,10 +93,10 @@ func (o orm) setSortField(sortFields []string, direction string) string {
 			}
 		}
 
-		sort = fmt.Sprintf("%s %s %s,", sort, sortKey, sortDirection)
+		sort = fmt.Sprintf("%s,%s %s", sort, sortKey, sortDirection)
 	}
 
-	return sort
+	return sort[1:]
 }
 
 func (o orm) sort(sorts []string, fieldSortMap map[string][]string) (string, []string) {
@@ -72,25 +111,27 @@ func (o orm) sort(sorts []string, fieldSortMap map[string][]string) (string, []s
 			continue
 		}
 
+		sortKey := sort
 		sortDirection := "asc"
 		if sort[0] == '-' {
 			sortDirection = "desc"
+			sortKey = sort[1:]
 		}
 
-		sortFields, ok := fieldSortMap[sort]
+		sortFields, ok := fieldSortMap[sortKey]
 		if !ok {
 			continue
 		}
 
-		sortQuery = fmt.Sprintf("%s %s,", sortQuery, o.setSortField(sortFields, sortDirection))
+		sortQuery = fmt.Sprintf("%s,%s", sortQuery, o.setSortField(sortFields, sortDirection))
 
 		validSorts = append(validSorts, sort)
 	}
 
-	return sortQuery, validSorts
+	return sortQuery[1:], validSorts
 }
 
-func (o *orm) Paginate(ctx context.Context, data interface{}, pagingResp *BasePagingResponse, options PaginateOptions) {
+func (o *orm) Paginate(ctx context.Context, options PaginateOptions, pagingResp *BasePagingResponse, data interface{}) Orm {
 	var (
 		ormCount, orm Orm = o.clone(), o.newImpl(o.g)
 		count             = int64(pagingResp.Count)
@@ -117,11 +158,11 @@ func (o *orm) Paginate(ctx context.Context, data interface{}, pagingResp *BasePa
 		orm.AddError(err)
 	}
 
-	pagingResp = &BasePagingResponse{
-		Count:       int(count),
-		CurrentPage: options.Paging.Page,
-		TotalPage:   calculateTotalPages(int(count), options.Paging.Limit),
-		Limit:       options.Paging.Limit,
-		Sorts:       arrSort,
-	}
+	pagingResp.Count = int(count)
+	pagingResp.CurrentPage = options.Paging.Page
+	pagingResp.TotalPage = calculateTotalPages(int(count), options.Paging.Limit)
+	pagingResp.Limit = options.Paging.Limit
+	pagingResp.Sorts = arrSort
+
+	return orm
 }

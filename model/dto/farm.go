@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
+	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 	"github.com/naufalfmm/aquafarm-management-service/utils/token"
 )
 
@@ -23,6 +24,22 @@ type (
 		Longitude *float64 `json:"longitude" validate:"required_with=Latitude"`
 
 		LoginData token.Data `validate:"dive,required"`
+	}
+
+	ListFarmFilterRequest struct {
+		Code             string     `query:"code"`
+		Village          string     `query:"village"`
+		District         string     `query:"district"`
+		City             string     `query:"city"`
+		Province         string     `query:"province"`
+		PostalCode       string     `query:"postalCode"`
+		CreatedDateStart *time.Time `query:"createdDateStart"`
+		CreatedDateEnd   *time.Time `query:"createdDateEnd"`
+	}
+
+	FarmPagingRequest struct {
+		orm.PagingRequest
+		Filter ListFarmFilterRequest
 	}
 
 	FarmResponse struct {
@@ -46,6 +63,13 @@ type (
 		UpdatedBy string    `json:"updatedBy"`
 
 		Ponds PondResponses `json:"ponds,omitempty"`
+	}
+
+	FarmResponses []FarmResponse
+
+	FarmPagingResponse struct {
+		orm.BasePagingResponse
+		Items FarmResponses `json:"items"`
 	}
 )
 
@@ -85,6 +109,48 @@ func (req CreateFarmRequest) ToFarm() dao.Farm {
 	}
 }
 
+func (filter ListFarmFilterRequest) Apply(o orm.Orm) orm.Orm {
+	if filter.Code != "" {
+		o = o.Where("farms.code", filter.Code)
+	}
+
+	if filter.Village != "" {
+		o = o.Where("farms.village", filter.Village)
+	}
+
+	if filter.District != "" {
+		o = o.Where("farms.district", filter.District)
+	}
+
+	if filter.City != "" {
+		o = o.Where("farms.city", filter.City)
+	}
+
+	if filter.Province != "" {
+		o = o.Where("farms.province", filter.Province)
+	}
+
+	if filter.PostalCode != "" {
+		o = o.Where("farms.postal_code", filter.PostalCode)
+	}
+
+	if filter.CreatedDateStart != nil && filter.CreatedDateEnd != nil {
+		o = o.Where("farms.created_at BETWEEN ? AND ?", *filter.CreatedDateStart, *filter.CreatedDateEnd)
+	}
+
+	return o
+}
+
+func (req *FarmPagingRequest) FromEchoContext(ec echo.Context) error {
+	req.PagingRequest = orm.NewPagingRequest(ec, []string{"createdDate"})
+
+	if err := ec.Bind(&req.Filter); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewFarmResponse(data dao.Farm) FarmResponse {
 	return FarmResponse{
 		ID:          data.ID,
@@ -107,5 +173,21 @@ func NewFarmResponse(data dao.Farm) FarmResponse {
 		UpdatedBy: data.UpdatedBy,
 
 		Ponds: NewPondResponses(data.Ponds),
+	}
+}
+
+func NewFarmResponses(farms dao.Farms) FarmResponses {
+	resps := make(FarmResponses, len(farms))
+	for i, farm := range farms {
+		resps[i] = NewFarmResponse(farm)
+	}
+
+	return resps
+}
+
+func NewFarmPagingResponse(farmPaging dao.FarmsPagingResponse) FarmPagingResponse {
+	return FarmPagingResponse{
+		BasePagingResponse: farmPaging.BasePagingResponse,
+		Items:              NewFarmResponses(farmPaging.Items),
 	}
 }

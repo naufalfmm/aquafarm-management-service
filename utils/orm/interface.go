@@ -13,6 +13,8 @@ type Orm interface {
 	Error() error
 	SetPreloads(opts ...preloadOpt) Orm
 
+	Paginate(ctx context.Context, options PaginateOptions, pagingResp *BasePagingResponse, data interface{}) Orm
+
 	AddError(err error) error
 	Assign(attrs ...interface{}) Orm
 	Association(column string) *gorm.Association
