@@ -7,7 +7,10 @@ import (
 )
 
 func (r repositories) Create(ctx context.Context, pond dao.Pond) (dao.Pond, error) {
-	if err := r.resources.MySql.GetDB().Create(&pond).Error(); err != nil {
+	if err := r.resources.MySql.GetDB().
+		WithContext(ctx).
+		Create(&pond).
+		Error(); err != nil {
 		return dao.Pond{}, err
 	}
 

@@ -10,7 +10,8 @@ import (
 
 func (r repositories) DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error {
 	now := time.Now()
-	if err := r.resources.MySql.Orm.
+	if err := r.resources.MySql.GetDB().
+		WithContext(ctx).
 		Model(&dao.Farm{}).
 		Where("id", id).
 		UpdateColumns(map[string]interface{}{

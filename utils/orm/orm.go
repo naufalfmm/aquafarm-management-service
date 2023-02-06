@@ -29,6 +29,14 @@ func (o *orm) newImpl(g *gorm.DB) *orm {
 	}
 }
 
+func (o *orm) clone() *orm {
+	return &orm{
+		g:           &(*o.g),
+		name:        o.name,
+		preloadOpts: o.preloadOpts,
+	}
+}
+
 func (o *orm) Gorm() *gorm.DB {
 	return o.g
 }

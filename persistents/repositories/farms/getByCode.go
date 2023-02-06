@@ -10,6 +10,7 @@ func (r repositories) GetByCode(ctx context.Context, code string) (dao.Farm, err
 	var farm dao.Farm
 
 	if err := r.resources.MySql.GetDB().
+		WithContext(ctx).
 		Where("code", code).
 		Take(&farm).
 		Error(); err != nil {

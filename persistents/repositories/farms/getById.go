@@ -10,6 +10,7 @@ func (r repositories) GetByID(ctx context.Context, id uint64) (dao.Farm, error) 
 	var farm dao.Farm
 
 	if err := r.resources.MySql.GetDB().
+		WithContext(ctx).
 		Where("id", id).
 		Take(&farm).
 		Error(); err != nil {
