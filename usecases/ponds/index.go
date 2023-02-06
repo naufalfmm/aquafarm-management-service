@@ -16,6 +16,7 @@ type (
 		DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error
 		GetByID(ctx context.Context, id uint64) (dao.Pond, error)
 		GetAllPaginated(ctx context.Context, req dto.PondPagingRequest) (dao.PondsPagingResponse, error)
+		Upsert(ctx context.Context, req dto.UpsertPondRequest) (dao.Pond, error)
 	}
 
 	usecases struct {

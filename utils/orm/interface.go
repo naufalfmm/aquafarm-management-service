@@ -12,6 +12,7 @@ type Orm interface {
 	Gorm() *gorm.DB
 	Error() error
 	SetPreloads(opts ...preloadOpt) Orm
+	ResetPreloads() Orm
 
 	Paginate(ctx context.Context, options PaginateOptions, pagingResp *BasePagingResponse, data interface{}) Orm
 

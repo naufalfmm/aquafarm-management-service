@@ -32,14 +32,16 @@ func (r *Routes) Register(ec *echo.Echo) {
 	farm := v1.Group("/farms", r.Middlewares.VerifyToken())
 	farm.GET("", r.Controllers.Farms.GetAllPaginated)
 	farm.POST("", r.Controllers.Farms.Create)
-	farm.POST("/:id/ponds", r.Controllers.Ponds.Create)
 	farm.DELETE("/:id", r.Controllers.Farms.DeleteByID)
 	farm.GET("/:id", r.Controllers.Farms.GetByID)
 	farm.PUT("/:code", r.Controllers.Farms.Upsert)
+	farm.POST("/:id/ponds", r.Controllers.Ponds.Create)
+	farm.PUT("/:id/ponds/:code", r.Controllers.Ponds.Upsert)
 
 	pond := v1.Group("/ponds", r.Middlewares.VerifyToken())
 	pond.GET("", r.Controllers.Ponds.GetAllPaginated)
 	pond.POST("", r.Controllers.Ponds.Create)
 	pond.DELETE("/:id", r.Controllers.Ponds.DeleteByID)
 	pond.GET("/:id", r.Controllers.Ponds.GetByID)
+	pond.PUT("/:code", r.Controllers.Ponds.Upsert)
 }
