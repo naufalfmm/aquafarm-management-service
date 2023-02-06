@@ -26,6 +26,23 @@ type (
 		LoginData token.Data `validate:"dive,required"`
 	}
 
+	UpsertFarmRequest struct {
+		Code string `param:"code" validate:"required"`
+
+		Description string `json:"description" validate:"required"`
+		Address     string `json:"address" validate:"required"`
+		Village     string `json:"village" validate:"required"`
+		District    string `json:"district" validate:"required"`
+		City        string `json:"city" validate:"required"`
+		Province    string `json:"province" validate:"required"`
+		PostalCode  string `json:"postalCode" validate:"required"`
+
+		Latitude  *float64 `json:"latitude" validate:"required_with=Longitude"`
+		Longitude *float64 `json:"longitude" validate:"required_with=Latitude"`
+
+		LoginData token.Data `validate:"dive,required"`
+	}
+
 	ListFarmFilterRequest struct {
 		Code             string     `query:"code"`
 		Village          string     `query:"village"`
@@ -106,6 +123,58 @@ func (req CreateFarmRequest) ToFarm() dao.Farm {
 		UpdatedAt: now,
 		CreatedBy: req.LoginData.CreatedBy(),
 		UpdatedBy: req.LoginData.CreatedBy(),
+	}
+}
+
+func (req *UpsertFarmRequest) FromEchoContext(ec echo.Context) error {
+	if err := ec.Bind(req); err != nil {
+		return err
+	}
+
+	req.LoginData = ec.Get("x-user").(token.Data)
+
+	if err := ec.Validate(req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (req UpsertFarmRequest) ToFarm() dao.Farm {
+	now := time.Now()
+	return dao.Farm{
+		Code:        req.Code,
+		Description: req.Description,
+		Address:     req.Address,
+		Village:     req.Village,
+		District:    req.District,
+		City:        req.City,
+		Province:    req.Province,
+		PostalCode:  req.PostalCode,
+
+		Latitude:  req.Latitude,
+		Longitude: req.Longitude,
+
+		CreatedAt: now,
+		UpdatedAt: now,
+		CreatedBy: req.LoginData.CreatedBy(),
+		UpdatedBy: req.LoginData.CreatedBy(),
+	}
+}
+
+func (req UpsertFarmRequest) ToUpdateMap() map[string]interface{} {
+	return map[string]interface{}{
+		"description": req.Description,
+		"address":     req.Address,
+		"village":     req.Village,
+		"district":    req.District,
+		"city":        req.City,
+		"province":    req.Province,
+		"postal_code": req.PostalCode,
+		"latitude":    req.Latitude,
+		"longitude":   req.Longitude,
+		"updated_at":  time.Now(),
+		"updated_by":  req.LoginData.CreatedBy(),
 	}
 }
 

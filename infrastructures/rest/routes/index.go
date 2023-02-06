@@ -35,6 +35,7 @@ func (r *Routes) Register(ec *echo.Echo) {
 	farm.POST("/:id/ponds", r.Controllers.Ponds.Create)
 	farm.DELETE("/:id", r.Controllers.Farms.DeleteByID)
 	farm.GET("/:id", r.Controllers.Farms.GetByID)
+	farm.PUT("/:code", r.Controllers.Farms.Upsert)
 
 	pond := v1.Group("/ponds", r.Middlewares.VerifyToken())
 	pond.GET("", r.Controllers.Ponds.GetAllPaginated)

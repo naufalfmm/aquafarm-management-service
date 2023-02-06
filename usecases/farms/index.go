@@ -16,6 +16,7 @@ type (
 		DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error
 		GetByID(ctx context.Context, id uint64) (dao.Farm, error)
 		GetAllPaginated(ctx context.Context, req dto.FarmPagingRequest) (dao.FarmsPagingResponse, error)
+		Upsert(ctx context.Context, req dto.UpsertFarmRequest) (dao.Farm, error)
 	}
 
 	usecases struct {

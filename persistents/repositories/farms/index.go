@@ -16,6 +16,7 @@ type (
 		GetByCode(ctx context.Context, code string) (dao.Farm, error)
 		DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error
 		GetAllPaginated(ctx context.Context, req dto.FarmPagingRequest) (dao.FarmsPagingResponse, error)
+		UpdateByID(ctx context.Context, id uint64, updateMap map[string]interface{}) error
 	}
 
 	repositories struct {
