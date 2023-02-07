@@ -10,7 +10,7 @@ import (
 
 func (u usecases) RequestEnd(ctx context.Context, requestID string) (dao.EndpointLog, error) {
 	if err := u.persistents.Repositories.EndpointLogs.UpdateByRequestID(ctx, requestID, map[string]interface{}{
-		"end_at":     time.Now(),
+		"end_at":     time.Now().UnixMilli(),
 		"updated_at": time.Now(),
 		"updated_by": consts.SystemCreatedBy,
 	}); err != nil {

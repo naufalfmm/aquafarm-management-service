@@ -54,7 +54,7 @@ func (req RequestStartLogRequest) ToEndpointLog() dao.EndpointLog {
 		UserAgent:   req.UserAgent,
 		IpAddress:   req.IpAddress,
 		RequestedBy: &req.RequestedBy,
-		StartAt:     time.Now(),
+		StartAt:     time.Now().UnixMilli(),
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 		CreatedBy:   consts.SystemCreatedBy,
