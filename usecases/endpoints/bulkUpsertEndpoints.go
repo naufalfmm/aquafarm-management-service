@@ -26,8 +26,10 @@ func (u usecases) BulkUpsertEndpoints(ctx context.Context, req dto.BulkUpsertEnd
 		deletedIDs = append(deletedIDs, endpoint.ID)
 	}
 
-	if err := u.persistents.Repositories.Endpoints.BulkDeleteByIDs(ctx, deletedIDs); err != nil {
-		return err
+	if len(deletedIDs) > 0 {
+		if err := u.persistents.Repositories.Endpoints.BulkDeleteByIDs(ctx, deletedIDs); err != nil {
+			return err
+		}
 	}
 
 	createdEndpoints := dao.Endpoints{}

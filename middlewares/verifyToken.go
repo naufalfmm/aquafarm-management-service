@@ -24,14 +24,14 @@ func (m middlewares) VerifyToken() echo.MiddlewareFunc {
 				token = tokenSplit[1]
 			}
 
-			tokenData, err := m.Resource.JWT.Decoder.DecodeToken(token)
+			tokenData, err := m.Resources.JWT.Decoder.DecodeToken(token)
 			if err != nil {
 				return generateResp.NewJSONResponse(c, http.StatusUnauthorized, "", consts.ErrInvalidToken)
 			}
 
 			userTokenData := tokenData.(*jwt.UserClaims).UserLogin
 
-			c.Set("x-user", &userTokenData)
+			c.Set(consts.XUserHeader, &userTokenData)
 
 			return next(c)
 		}

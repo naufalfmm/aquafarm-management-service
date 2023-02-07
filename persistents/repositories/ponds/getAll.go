@@ -11,7 +11,9 @@ func (r repositories) GetAll(ctx context.Context, req dto.PondListRequest) (dao.
 	var ponds dao.Ponds
 
 	if err := req.Apply(r.resources.MySql.GetDB().WithContext(ctx)).
-		Find(&ponds).Error(); err != nil {
+		Preload("Farm").
+		Find(&ponds).
+		Error(); err != nil {
 		return nil, err
 	}
 

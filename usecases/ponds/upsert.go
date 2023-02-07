@@ -5,11 +5,10 @@ import (
 
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
 	"github.com/naufalfmm/aquafarm-management-service/model/dto"
-	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 )
 
 func (u usecases) Upsert(ctx context.Context, req dto.UpsertPondRequest) (dao.Pond, error) {
-	u.resources.MySql.SetPreloads(orm.SetPreload("Farm"))
+	// u.resources.MySql.SetPreloads(orm.SetPreload("Farm"))
 	ponds, err := u.persistents.Repositories.Ponds.GetAll(ctx, dto.PondListRequest{
 		ListPondFilterRequest: dto.ListPondFilterRequest{
 			Code:     req.Code,
@@ -20,7 +19,7 @@ func (u usecases) Upsert(ctx context.Context, req dto.UpsertPondRequest) (dao.Po
 	if err != nil {
 		return dao.Pond{}, err
 	}
-	u.resources.MySql.ResetPreloads()
+	// u.resources.MySql.ResetPreloads()
 
 	if len(ponds) == 0 {
 		return u.Create(ctx, dto.CreatePondRequest{

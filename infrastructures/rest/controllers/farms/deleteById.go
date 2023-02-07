@@ -21,7 +21,7 @@ func (c Controllers) DeleteByID(ec echo.Context) error {
 		return generateResp.NewJSONResponse(ec, http.StatusBadRequest, consts.ErrIdRequired.Error(), consts.ErrIdRequired)
 	}
 
-	loginData := ec.Get("x-user").(token.Data)
+	loginData := ec.Get(consts.XUserHeader).(token.Data)
 
 	if err := c.Usecases.Farms.DeleteByID(ec.Request().Context(), id, loginData); err != nil {
 		return c.buildErrorDeleteByID(ec, err)

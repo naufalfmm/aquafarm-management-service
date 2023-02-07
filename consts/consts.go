@@ -6,4 +6,6 @@ const (
 	EndpointNameEchoLibrary = "github.com/labstack/echo/v4"
 	EndpointNameApp         = "app.App.Run"
 	SystemCreatedBy         = "SYSTEM"
+	XRequestIDHeader        = "X-Request-ID"
+	XUserHeader             = "X-User"
 )

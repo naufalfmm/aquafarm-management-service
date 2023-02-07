@@ -9,9 +9,8 @@ import (
 )
 
 type orm struct {
-	g           *gorm.DB
-	name        string
-	preloadOpts preloadOpts
+	g    *gorm.DB
+	name string
 }
 
 func NewOrm(g *gorm.DB, name string) (orm, error) {
@@ -23,17 +22,8 @@ func NewOrm(g *gorm.DB, name string) (orm, error) {
 
 func (o *orm) newImpl(g *gorm.DB) Orm {
 	return &orm{
-		g:           g,
-		name:        o.name,
-		preloadOpts: o.preloadOpts,
-	}
-}
-
-func (o *orm) clone() Orm {
-	return &orm{
-		g:           &(*o.g),
-		name:        o.name,
-		preloadOpts: o.preloadOpts,
+		g:    g,
+		name: o.name,
 	}
 }
 
@@ -45,21 +35,11 @@ func (o *orm) Error() error {
 	return o.g.Error
 }
 
-func (o *orm) SetPreloads(opts ...preloadOpt) Orm {
-	o.preloadOpts = make(preloadOpts, len(opts))
-	for i, opt := range opts {
-		o.preloadOpts[i] = preloadOpt{
-			query: opt.query,
-			args:  opt.args,
-		}
+func (o *orm) Clone() Orm {
+	return &orm{
+		g:    &(*o.g),
+		name: o.name,
 	}
-
-	return o
-}
-
-func (o *orm) ResetPreloads() Orm {
-	o.preloadOpts = nil
-	return o
 }
 
 func (o *orm) AddError(err error) error {
@@ -133,10 +113,6 @@ func (o *orm) Exec(sql string, values ...interface{}) Orm {
 }
 
 func (o *orm) Find(dest interface{}, conds ...interface{}) Orm {
-	for _, preloadOpt := range o.preloadOpts {
-		o.Preload(preloadOpt.query, preloadOpt.args...)
-	}
-
 	return o.newImpl(o.g.Find(dest, conds...))
 }
 
@@ -298,10 +274,6 @@ func (o *orm) Table(name string, args ...interface{}) Orm {
 }
 
 func (o *orm) Take(dest interface{}, conds ...interface{}) Orm {
-	for _, preloadOpt := range o.preloadOpts {
-		o.Preload(preloadOpt.query, preloadOpt.args...)
-	}
-
 	return o.newImpl(o.g.Take(dest, conds...))
 }
 

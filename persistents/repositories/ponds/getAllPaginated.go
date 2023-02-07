@@ -21,10 +21,12 @@ func (r repositories) GetAllPaginated(ctx context.Context, req dto.PondPagingReq
 
 	if err := req.Filter.Apply(r.resources.MySql.GetDB().WithContext(ctx)).
 		Model(&dao.Pond{}).
+		Preload("Farm").
 		Paginate(ctx, orm.PaginateOptions{
 			Paging:       req.PagingRequest,
 			FieldSortMap: sortMap,
-		}, &basePagingResp, &ponds).Error(); err != nil {
+		}, &basePagingResp, &ponds).
+		Error(); err != nil {
 		return dao.PondsPagingResponse{}, err
 	}
 

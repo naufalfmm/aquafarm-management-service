@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/naufalfmm/aquafarm-management-service/consts"
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 	"github.com/naufalfmm/aquafarm-management-service/utils/token"
@@ -95,7 +96,7 @@ func (req *CreateFarmRequest) FromEchoContext(ec echo.Context) error {
 		return err
 	}
 
-	req.LoginData = ec.Get("x-user").(token.Data)
+	req.LoginData = ec.Get(consts.XUserHeader).(token.Data)
 
 	if err := ec.Validate(req); err != nil {
 		return err
@@ -131,7 +132,7 @@ func (req *UpsertFarmRequest) FromEchoContext(ec echo.Context) error {
 		return err
 	}
 
-	req.LoginData = ec.Get("x-user").(token.Data)
+	req.LoginData = ec.Get(consts.XUserHeader).(token.Data)
 
 	if err := ec.Validate(req); err != nil {
 		return err

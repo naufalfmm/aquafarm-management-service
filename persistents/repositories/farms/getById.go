@@ -11,6 +11,7 @@ func (r repositories) GetByID(ctx context.Context, id uint64) (dao.Farm, error) 
 
 	if err := r.resources.MySql.GetDB().
 		WithContext(ctx).
+		Preload("Ponds").
 		Where("id", id).
 		Take(&farm).
 		Error(); err != nil {

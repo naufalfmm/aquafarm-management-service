@@ -137,7 +137,7 @@ func (o orm) sort(sorts []string, fieldSortMap map[string][]string) (string, []s
 
 func (o *orm) Paginate(ctx context.Context, options PaginateOptions, pagingResp *BasePagingResponse, data interface{}) Orm {
 	var (
-		ormCount, orm Orm = o.clone(), o.newImpl(o.g)
+		ormCount, orm Orm = o.Clone(), o.newImpl(o.g)
 		count             = int64(pagingResp.Count)
 	)
 

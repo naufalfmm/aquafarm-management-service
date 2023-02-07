@@ -29,7 +29,7 @@ func (r *Routes) Register(ec *echo.Echo) {
 	ec.Pre(r.Middlewares.RemoveTrailingSlash())
 	v1 := ec.Group("/v1")
 
-	farm := v1.Group("/farms", r.Middlewares.VerifyToken())
+	farm := v1.Group("/farms", r.Middlewares.VerifyToken(), r.Middlewares.RequestStart(), r.Middlewares.RequestEnd())
 	farm.GET("", r.Controllers.Farms.GetAllPaginated)
 	farm.POST("", r.Controllers.Farms.Create)
 	farm.DELETE("/:id", r.Controllers.Farms.DeleteByID)
@@ -38,7 +38,7 @@ func (r *Routes) Register(ec *echo.Echo) {
 	farm.POST("/:id/ponds", r.Controllers.Ponds.Create)
 	farm.PUT("/:id/ponds/:code", r.Controllers.Ponds.Upsert)
 
-	pond := v1.Group("/ponds", r.Middlewares.VerifyToken())
+	pond := v1.Group("/ponds", r.Middlewares.VerifyToken(), r.Middlewares.RequestStart(), r.Middlewares.RequestEnd())
 	pond.GET("", r.Controllers.Ponds.GetAllPaginated)
 	pond.POST("", r.Controllers.Ponds.Create)
 	pond.DELETE("/:id", r.Controllers.Ponds.DeleteByID)

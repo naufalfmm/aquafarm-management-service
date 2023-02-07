@@ -40,7 +40,7 @@ func Init() App {
 		panic(err)
 	}
 
-	middl, err := middlewares.Init(res)
+	middl, err := middlewares.Init(res, usec)
 	if err != nil {
 		panic(err)
 	}

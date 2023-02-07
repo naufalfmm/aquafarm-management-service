@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	endpointLogsRepositories "github.com/naufalfmm/aquafarm-management-service/persistents/repositories/endpointLogs"
 	endpointsRepositories "github.com/naufalfmm/aquafarm-management-service/persistents/repositories/endpoints"
 	farmsRepositories "github.com/naufalfmm/aquafarm-management-service/persistents/repositories/farms"
 	pondsRepositories "github.com/naufalfmm/aquafarm-management-service/persistents/repositories/ponds"
@@ -8,30 +9,37 @@ import (
 )
 
 type Repositories struct {
-	Farms     farmsRepositories.Repositories
-	Ponds     pondsRepositories.Repositories
-	Endpoints endpointsRepositories.Repositories
+	Farms        farmsRepositories.Repositories
+	Ponds        pondsRepositories.Repositories
+	Endpoints    endpointsRepositories.Repositories
+	EndpointLogs endpointLogsRepositories.Repositories
 }
 
 func Init(res resources.Resources) (Repositories, error) {
-	farmsRepo, err := farmsRepositories.Init(res)
+	farmRepo, err := farmsRepositories.Init(res)
 	if err != nil {
 		return Repositories{}, err
 	}
 
-	pondsRepo, err := pondsRepositories.Init(res)
+	pondRepo, err := pondsRepositories.Init(res)
 	if err != nil {
 		return Repositories{}, err
 	}
 
-	endpointsRepo, err := endpointsRepositories.Init(res)
+	endpointRepo, err := endpointsRepositories.Init(res)
+	if err != nil {
+		return Repositories{}, err
+	}
+
+	endpointLogRepo, err := endpointLogsRepositories.Init(res)
 	if err != nil {
 		return Repositories{}, err
 	}
 
 	return Repositories{
-		Farms:     farmsRepo,
-		Ponds:     pondsRepo,
-		Endpoints: endpointsRepo,
+		Farms:        farmRepo,
+		Ponds:        pondRepo,
+		Endpoints:    endpointRepo,
+		EndpointLogs: endpointLogRepo,
 	}, nil
 }

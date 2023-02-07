@@ -1,4 +1,4 @@
-package endpointsRepositories
+package endpointLogsRepositories
 
 import (
 	"context"
@@ -9,10 +9,9 @@ import (
 
 type (
 	Repositories interface {
-		BulkCreate(ctx context.Context, data dao.Endpoints) (dao.Endpoints, error)
-		GetAll(ctx context.Context) (dao.Endpoints, error)
-		BulkDeleteByIDs(ctx context.Context, ids []uint64) error
-		GetByMethodPath(ctx context.Context, method, path string) (dao.Endpoint, error)
+		Create(ctx context.Context, data dao.EndpointLog) (dao.EndpointLog, error)
+		UpdateByRequestID(ctx context.Context, requestID string, updateMap map[string]interface{}) error
+		GetByRequestID(ctx context.Context, requestID string) (dao.EndpointLog, error)
 	}
 
 	repositories struct {
