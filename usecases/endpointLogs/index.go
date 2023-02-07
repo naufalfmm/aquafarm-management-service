@@ -11,8 +11,7 @@ import (
 
 type (
 	Usecases interface {
-		RequestStart(ctx context.Context, req dto.RequestStartLogRequest) (dao.EndpointLog, error)
-		RequestEnd(ctx context.Context, requestID string) (dao.EndpointLog, error)
+		RecordRequestLog(ctx context.Context, req dto.RecordRequestLogRequest) (dao.EndpointLog, error)
 	}
 
 	usecases struct {

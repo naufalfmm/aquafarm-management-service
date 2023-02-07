@@ -7,7 +7,7 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/model/dto"
 )
 
-func (u usecases) RequestStart(ctx context.Context, req dto.RequestStartLogRequest) (dao.EndpointLog, error) {
+func (u usecases) RecordRequestLog(ctx context.Context, req dto.RecordRequestLogRequest) (dao.EndpointLog, error) {
 	endpoint, err := u.persistents.Repositories.Endpoints.GetByMethodPath(ctx, req.Method, req.Path)
 	if err != nil {
 		return dao.EndpointLog{}, err

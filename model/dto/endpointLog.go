@@ -11,7 +11,7 @@ import (
 )
 
 type (
-	RequestStartLogRequest struct {
+	RecordRequestLogRequest struct {
 		Method string
 		Path   string
 
@@ -20,12 +20,14 @@ type (
 		UserAgent   string
 		IpAddress   string
 		RequestedBy string
+		StartAt     int64
+		EndAt       int64
 
 		EndpointID uint64
 	}
 )
 
-func (req *RequestStartLogRequest) FromEchoContext(ec echo.Context) error {
+func (req *RecordRequestLogRequest) FromEchoContext(ec echo.Context) error {
 	req.Method = ec.Request().Method
 	req.Path = cleanPath(ec.Path())
 
@@ -34,11 +36,13 @@ func (req *RequestStartLogRequest) FromEchoContext(ec echo.Context) error {
 	req.UserAgent = ec.Request().UserAgent()
 	req.IpAddress = ec.RealIP()
 	req.RequestedBy = ec.Get(consts.XUserHeader).(token.Data).CreatedBy()
+	req.StartAt = ec.Get(consts.XRequestStartUnix).(int64)
+	req.EndAt = time.Now().UnixMilli()
 
 	return nil
 }
 
-func (req RequestStartLogRequest) ToEndpointLog() dao.EndpointLog {
+func (req RecordRequestLogRequest) ToEndpointLog() dao.EndpointLog {
 	splittedUri := strings.Split(req.FullUri, "?")
 
 	query := ""
@@ -54,7 +58,8 @@ func (req RequestStartLogRequest) ToEndpointLog() dao.EndpointLog {
 		UserAgent:   req.UserAgent,
 		IpAddress:   req.IpAddress,
 		RequestedBy: &req.RequestedBy,
-		StartAt:     time.Now().UnixMilli(),
+		StartAt:     req.StartAt,
+		EndAt:       &req.EndAt,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 		CreatedBy:   consts.SystemCreatedBy,

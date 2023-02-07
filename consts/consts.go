@@ -8,4 +8,5 @@ const (
 	SystemCreatedBy         = "SYSTEM"
 	XRequestIDHeader        = "X-Request-ID"
 	XUserHeader             = "X-User"
+	XRequestStartUnix       = "X-Request-Start-Unix"
 )
