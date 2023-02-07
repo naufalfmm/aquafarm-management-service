@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -26,6 +27,15 @@ type (
 
 		EndpointID uint64
 	}
+
+	EndpointLogReportResponse struct {
+		Count                  uint64  `json:"count"`
+		UserAgentDistinctCount uint64  `json:"unique_user_agent"`
+		IpAddressDistinctCount uint64  `json:"unique_ip_address"`
+		RequestTimeAverage     float64 `json:"request_time_average"`
+	}
+
+	EndpointLogReportResponseMap map[string]EndpointLogReportResponse
 )
 
 func (req *RecordRequestLogRequest) FromEchoContext(ec echo.Context) error {
@@ -68,4 +78,23 @@ func (req RecordRequestLogRequest) ToEndpointLog() dao.EndpointLog {
 		CreatedBy:          consts.SystemCreatedBy,
 		UpdatedBy:          consts.SystemCreatedBy,
 	}
+}
+
+func NewEndpointLogReportResponse(report dao.EndpointLogReport) EndpointLogReportResponse {
+	return EndpointLogReportResponse{
+		Count:                  report.Count,
+		UserAgentDistinctCount: report.UserAgentDistinctCount,
+		IpAddressDistinctCount: report.IpAddressDistinctCount,
+		RequestTimeAverage:     report.RequestTimeAverage,
+	}
+}
+
+func NewEndpointLogReportResponseMap(reports dao.EndpointLogReports) EndpointLogReportResponseMap {
+	resp := make(EndpointLogReportResponseMap)
+
+	for _, report := range reports {
+		resp[fmt.Sprintf("%s %s", report.Endpoint.Method, report.Endpoint.Path)] = NewEndpointLogReportResponse(report)
+	}
+
+	return resp
 }

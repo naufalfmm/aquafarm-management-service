@@ -44,4 +44,7 @@ func (r *Routes) Register(ec *echo.Echo) {
 	pond.DELETE("/:id", r.Controllers.Ponds.DeleteByID)
 	pond.GET("/:id", r.Controllers.Ponds.GetByID)
 	pond.PUT("/:code", r.Controllers.Ponds.Upsert)
+
+	endpoint := v1.Group("/endpoints", r.Middlewares.VerifyToken(), r.Middlewares.RequestStart())
+	endpoint.GET("/reports", r.Controllers.EndpointLogs.GetAllReports)
 }

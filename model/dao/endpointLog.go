@@ -23,6 +23,18 @@ type (
 
 		Endpoint Endpoint `gorm:"->;foreignKey:ID;references:EndpointID"`
 	}
+
+	EndpointLogReport struct {
+		EndpointID             uint64  `gorm:"not null"`
+		Count                  uint64  `gorm:"not null"`
+		UserAgentDistinctCount uint64  `gorm:"not null"`
+		IpAddressDistinctCount uint64  `gorm:"not null"`
+		RequestTimeAverage     float64 `gorm:"not null"`
+
+		Endpoint Endpoint `gorm:"->;foreignKey:ID;references:EndpointID"`
+	}
+
+	EndpointLogReports []EndpointLogReport
 )
 
 func (EndpointLog) TableName() string {

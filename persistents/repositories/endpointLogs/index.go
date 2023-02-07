@@ -12,6 +12,7 @@ type (
 		Create(ctx context.Context, data dao.EndpointLog) (dao.EndpointLog, error)
 		UpdateByRequestID(ctx context.Context, requestID string, updateMap map[string]interface{}) error
 		GetByRequestID(ctx context.Context, requestID string) (dao.EndpointLog, error)
+		GetAllReports(ctx context.Context) (dao.EndpointLogReports, error)
 	}
 
 	repositories struct {
