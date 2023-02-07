@@ -15,13 +15,14 @@ type (
 		Method string
 		Path   string
 
-		RequestID   string
-		FullUri     string
-		UserAgent   string
-		IpAddress   string
-		RequestedBy string
-		StartAt     int64
-		EndAt       int64
+		RequestID          string
+		FullUri            string
+		UserAgent          string
+		IpAddress          string
+		RequestedBy        string
+		ResponseStatusCode int
+		StartAt            int64
+		EndAt              int64
 
 		EndpointID uint64
 	}
@@ -36,6 +37,7 @@ func (req *RecordRequestLogRequest) FromEchoContext(ec echo.Context) error {
 	req.UserAgent = ec.Request().UserAgent()
 	req.IpAddress = ec.RealIP()
 	req.RequestedBy = ec.Get(consts.XUserHeader).(token.Data).CreatedBy()
+	req.ResponseStatusCode = ec.Response().Status
 	req.StartAt = ec.Get(consts.XRequestStartUnix).(int64)
 	req.EndAt = time.Now().UnixMilli()
 
@@ -51,18 +53,19 @@ func (req RecordRequestLogRequest) ToEndpointLog() dao.EndpointLog {
 	}
 
 	return dao.EndpointLog{
-		EndpointID:  req.EndpointID,
-		RequestID:   req.RequestID,
-		Uri:         splittedUri[0],
-		Query:       query,
-		UserAgent:   req.UserAgent,
-		IpAddress:   req.IpAddress,
-		RequestedBy: &req.RequestedBy,
-		StartAt:     req.StartAt,
-		EndAt:       &req.EndAt,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
-		CreatedBy:   consts.SystemCreatedBy,
-		UpdatedBy:   consts.SystemCreatedBy,
+		EndpointID:         req.EndpointID,
+		RequestID:          req.RequestID,
+		Uri:                splittedUri[0],
+		Query:              query,
+		UserAgent:          req.UserAgent,
+		IpAddress:          req.IpAddress,
+		RequestedBy:        &req.RequestedBy,
+		ResponseStatusCode: req.ResponseStatusCode,
+		StartAt:            req.StartAt,
+		EndAt:              &req.EndAt,
+		CreatedAt:          time.Now(),
+		UpdatedAt:          time.Now(),
+		CreatedBy:          consts.SystemCreatedBy,
+		UpdatedBy:          consts.SystemCreatedBy,
 	}
 }
