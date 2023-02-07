@@ -28,6 +28,7 @@ func (m middlewares) PanicRecover() echo.MiddlewareFunc {
 							Err: err,
 						}
 					}
+
 					generateResp.NewJSONResponse(c, http.StatusInternalServerError, "", err)
 				}
 			}()
