@@ -37,6 +37,6 @@ type (
 	}
 )
 
-func (p Pond) TableName() string {
+func (Pond) TableName() string {
 	return "ponds"
 }

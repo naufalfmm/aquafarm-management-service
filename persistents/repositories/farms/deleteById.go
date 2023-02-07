@@ -15,7 +15,7 @@ func (r repositories) DeleteByID(ctx context.Context, id uint64, loginDeleted to
 		Model(&dao.Farm{}).
 		Where("id", id).
 		UpdateColumns(map[string]interface{}{
-			"deleted_at":   time.Now(),
+			"deleted_at":   now,
 			"deleted_by":   loginDeleted.CreatedBy(),
 			"deleted_unix": now.Unix(),
 		}).

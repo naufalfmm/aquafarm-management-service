@@ -42,6 +42,6 @@ type (
 	}
 )
 
-func (f Farm) TableName() string {
+func (Farm) TableName() string {
 	return "farms"
 }

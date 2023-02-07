@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/naufalfmm/aquafarm-management-service/consts"
+	"github.com/naufalfmm/aquafarm-management-service/hooks"
 	"github.com/naufalfmm/aquafarm-management-service/infrastructures"
 	"github.com/naufalfmm/aquafarm-management-service/middlewares"
 	"github.com/naufalfmm/aquafarm-management-service/persistents"
@@ -18,6 +19,7 @@ type App struct {
 	Ec          *echo.Echo
 	Resources   resources.Resources
 	Middlewares middlewares.Middlewares
+	Hooks       hooks.Hooks
 }
 
 func Init() App {
@@ -43,6 +45,11 @@ func Init() App {
 		panic(err)
 	}
 
+	hookImp, err := hooks.Init(usec, res)
+	if err != nil {
+		panic(err)
+	}
+
 	infr, err := infrastructures.Init(usec, res, middl)
 	if err != nil {
 		panic(err)
@@ -54,6 +61,7 @@ func Init() App {
 		Ec:          ec,
 		Resources:   res,
 		Middlewares: middl,
+		Hooks:       hookImp,
 	}
 }
 
@@ -71,6 +79,8 @@ func (app App) Run() {
 	echo.NotFoundHandler = func(c echo.Context) error {
 		return generateResp.NewJSONResponse(c, http.StatusNotFound, "", consts.ErrPathNotFound)
 	}
+
+	go app.Hooks.BulkUpsertEndpoints(app.Ec.AcquireContext())
 
 	if err := app.Ec.Start(fmt.Sprintf(":%d", app.Resources.Config.ServicePort)); err != nil {
 		panic(err)
