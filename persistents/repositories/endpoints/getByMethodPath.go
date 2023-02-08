@@ -10,6 +10,7 @@ import (
 func (r repositories) GetByMethodPath(ctx context.Context, method, path string) (dao.Endpoint, error) {
 	var endpoint dao.Endpoint
 	if err := r.resources.MySql.GetDB().
+		WithContext(ctx).
 		Where("method", method).
 		Where("path", path).
 		Take(&endpoint).

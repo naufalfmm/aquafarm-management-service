@@ -1,5 +1,5 @@
 package token
 
 type Decoder interface {
-	DecodeToken(token string) (Claims, error)
+	DecodeToken(t string) (Claims, error)
 }

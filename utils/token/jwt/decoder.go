@@ -16,8 +16,8 @@ func NewDecoder(publicKey string) token.Decoder {
 	}
 }
 
-func (d *decoder) DecodeToken(token string) (token.Claims, error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
+func (d *decoder) DecodeToken(t string) (token.Claims, error) {
+	tokenClaims, err := jwt.ParseWithClaims(t, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(d.publicKey), nil
 	})
 	if err != nil || tokenClaims == nil || tokenClaims.Claims == nil {

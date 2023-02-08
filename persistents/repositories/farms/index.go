@@ -2,11 +2,16 @@ package farmsRepositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
 	"github.com/naufalfmm/aquafarm-management-service/model/dto"
 	"github.com/naufalfmm/aquafarm-management-service/resources"
 	"github.com/naufalfmm/aquafarm-management-service/utils/token"
+)
+
+var (
+	timeNow = time.Now
 )
 
 type (

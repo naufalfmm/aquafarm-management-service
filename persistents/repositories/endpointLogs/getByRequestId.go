@@ -10,6 +10,7 @@ import (
 func (r repositories) GetByRequestID(ctx context.Context, requestID string) (dao.EndpointLog, error) {
 	var endpointLog dao.EndpointLog
 	if err := r.resources.MySql.GetDB().
+		WithContext(ctx).
 		Where("request_id", requestID).
 		Take(&endpointLog).
 		Error(); err != nil {

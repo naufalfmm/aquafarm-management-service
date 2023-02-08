@@ -2,9 +2,14 @@ package endpointsRepositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
 	"github.com/naufalfmm/aquafarm-management-service/resources"
+)
+
+var (
+	timeNow = time.Now
 )
 
 type (
