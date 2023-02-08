@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/naufalfmm/aquafarm-management-service/consts"
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
+	"github.com/naufalfmm/aquafarm-management-service/utils/frTime"
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 	"github.com/naufalfmm/aquafarm-management-service/utils/token"
 )
@@ -102,7 +103,7 @@ func (req *CreatePondRequest) FromEchoContext(ec echo.Context) error {
 }
 
 func (req CreatePondRequest) ToPond() dao.Pond {
-	now := time.Now()
+	now := frTime.Now()
 	return dao.Pond{
 		FarmID:      req.FarmID,
 		Code:        req.Code,
@@ -156,8 +157,21 @@ func (req UpsertPondRequest) ToUpdateMap() map[string]interface{} {
 		"wide":        req.Wide,
 		"long":        req.Long,
 		"depth":       req.Depth,
-		"updated_at":  time.Now(),
+		"updated_at":  frTime.Now(),
 		"updated_by":  req.LoginData.CreatedBy(),
+	}
+}
+
+func (req UpsertPondRequest) ToCreatePondRequest() CreatePondRequest {
+	return CreatePondRequest{
+		FarmID:      req.FarmID,
+		FarmCode:    req.FarmCode,
+		Code:        req.Code,
+		Description: req.Description,
+		Wide:        req.Wide,
+		Long:        req.Long,
+		Depth:       req.Depth,
+		LoginData:   req.LoginData,
 	}
 }
 

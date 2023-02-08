@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/naufalfmm/aquafarm-management-service/consts"
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
+	"github.com/naufalfmm/aquafarm-management-service/utils/frTime"
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 	"github.com/naufalfmm/aquafarm-management-service/utils/token"
 )
@@ -106,7 +107,7 @@ func (req *CreateFarmRequest) FromEchoContext(ec echo.Context) error {
 }
 
 func (req CreateFarmRequest) ToFarm() dao.Farm {
-	now := time.Now()
+	now := frTime.Now()
 	return dao.Farm{
 		Code:        req.Code,
 		Description: req.Description,
@@ -142,7 +143,7 @@ func (req *UpsertFarmRequest) FromEchoContext(ec echo.Context) error {
 }
 
 func (req UpsertFarmRequest) ToFarm() dao.Farm {
-	now := time.Now()
+	now := frTime.Now()
 	return dao.Farm{
 		Code:        req.Code,
 		Description: req.Description,
@@ -174,7 +175,7 @@ func (req UpsertFarmRequest) ToUpdateMap() map[string]interface{} {
 		"postal_code": req.PostalCode,
 		"latitude":    req.Latitude,
 		"longitude":   req.Longitude,
-		"updated_at":  time.Now(),
+		"updated_at":  frTime.Now(),
 		"updated_by":  req.LoginData.CreatedBy(),
 	}
 }

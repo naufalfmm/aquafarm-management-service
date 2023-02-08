@@ -20,16 +20,7 @@ func (u usecases) Upsert(ctx context.Context, req dto.UpsertPondRequest) (dao.Po
 	}
 
 	if len(ponds) == 0 {
-		return u.Create(ctx, dto.CreatePondRequest{
-			FarmID:      req.FarmID,
-			FarmCode:    req.FarmCode,
-			Code:        req.Code,
-			Description: req.Description,
-			Wide:        req.Wide,
-			Long:        req.Long,
-			Depth:       req.Depth,
-			LoginData:   req.LoginData,
-		})
+		return u.Create(ctx, req.ToCreatePondRequest())
 	}
 
 	req.FarmID = ponds[0].FarmID
