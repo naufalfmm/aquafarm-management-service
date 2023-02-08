@@ -4,12 +4,15 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/resources/config"
 	"github.com/naufalfmm/aquafarm-management-service/resources/db"
 	jwToken "github.com/naufalfmm/aquafarm-management-service/resources/jwt"
+	"github.com/naufalfmm/aquafarm-management-service/resources/log"
+	"github.com/naufalfmm/aquafarm-management-service/utils/logger"
 	"github.com/naufalfmm/aquafarm-management-service/utils/token/jwt"
 	"github.com/naufalfmm/aquafarm-management-service/utils/validator"
 )
 
 type Resources struct {
 	Config    *config.EnvConfig
+	Logger    logger.Logger
 	MySql     *db.DB
 	Validator validator.Validator
 	JWT       jwt.JWT
@@ -21,7 +24,12 @@ func Init() (Resources, error) {
 		return Resources{}, err
 	}
 
-	mysql, err := db.NewMysql(conf)
+	logger, err := log.NewLog()
+	if err != nil {
+		return Resources{}, err
+	}
+
+	mysql, err := db.NewMysql(conf, logger)
 	if err != nil {
 		return Resources{}, err
 	}
@@ -38,6 +46,7 @@ func Init() (Resources, error) {
 
 	return Resources{
 		Config:    conf,
+		Logger:    logger,
 		MySql:     mysql,
 		Validator: validator,
 		JWT:       jwtImp,

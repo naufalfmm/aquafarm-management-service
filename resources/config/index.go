@@ -21,6 +21,9 @@ type EnvConfig struct {
 	MySqlMaxOpenConnection int           `envconfig:"MYSQL_MAX_OPEN_CONNECTION" default:"10"`
 	MySqlConnMaxLifetime   time.Duration `envconfig:"MYSQL_CONNECTION_MAX_LIFE_TIME" default:"60s"`
 
+	MySqlLogMode          bool          `envconfig:"MYSQL_LOG_MODE" default:"false"`
+	MySqlLogSlowThreshold time.Duration `envconfig:"MYSQL_LOG_SLOW_THRESHOLD"`
+
 	JwtPublicKey string `envconfig:"JWT_PUBLIC_KEY" required:"true"`
 	JwtAlg       string `envconfig:"JWT_ALG" required:"true" default:"HS256"`
 }

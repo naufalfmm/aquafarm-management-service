@@ -1,27 +1,26 @@
 package db
 
 import (
-	"fmt"
-
 	"github.com/naufalfmm/aquafarm-management-service/resources/config"
+	"github.com/naufalfmm/aquafarm-management-service/utils/logger"
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 )
 
-func generateURI(conf *config.EnvConfig) string {
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
-		conf.MySqlDbUsername, conf.MySqlDbPassword, conf.MySqlDbAddress, conf.MySqlDbName)
-}
+func NewMysql(config *config.EnvConfig, log logger.Logger) (*DB, error) {
+	confs := []orm.MysqlConfig{
+		orm.WithAddress(config.MySqlDbAddress),
+		orm.WithUsernamePassword(config.MySqlDbUsername, config.MySqlDbPassword),
+		orm.WithDatabaseName(config.MySqlDbName),
+		orm.WithMaxIdleConnection(config.MySqlMaxIdleConnection),
+		orm.WithMaxOpenConnection(config.MySqlMaxOpenConnection),
+		orm.WithConnMaxLifetime(config.MySqlConnMaxLifetime),
+	}
 
-func NewMysql(config *config.EnvConfig) (*DB, error) {
-	o, err := orm.NewMysql(orm.MySqlConfig{
-		Address:           config.MySqlDbAddress,
-		Username:          config.MySqlDbUsername,
-		Password:          config.MySqlDbPassword,
-		DBName:            config.MySqlDbName,
-		MaxIdleConnection: config.MySqlMaxIdleConnection,
-		MaxOpenConnection: config.MySqlMaxOpenConnection,
-		ConnMaxLifetime:   config.MySqlConnMaxLifetime,
-	})
+	if config.MySqlLogMode {
+		confs = append(confs, orm.WithLog(log, config.MySqlLogSlowThreshold))
+	}
+
+	o, err := orm.NewMysql(confs...)
 	if err != nil {
 		return nil, err
 	}

@@ -1,35 +1,22 @@
 package orm
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/naufalfmm/aquafarm-management-service/consts"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
-type MySqlConfig struct {
-	Address  string
-	Username string
-	Password string
-	DBName   string
+func NewMysql(configs ...MysqlConfig) (Orm, error) {
+	conf, err := defaultMysqlConfig()
+	if err != nil {
+		return nil, err
+	}
 
-	MaxIdleConnection int
-	MaxOpenConnection int
-	ConnMaxLifetime   time.Duration
-}
+	for _, config := range configs {
+		config.Apply(&conf)
+	}
 
-func (c MySqlConfig) generateURI() string {
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
-		c.Username, c.Password, c.Address, c.DBName)
-}
-
-func NewMysql(config MySqlConfig) (Orm, error) {
-	db, err := gorm.Open(mysql.Open(config.generateURI()), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	db, err := gorm.Open(mysql.Open(conf.generateURI()), conf.ToGormConfig())
 	if err != nil {
 		return nil, err
 	}
@@ -39,9 +26,9 @@ func NewMysql(config MySqlConfig) (Orm, error) {
 		return nil, err
 	}
 
-	sqlDb.SetMaxIdleConns(config.MaxIdleConnection)
-	sqlDb.SetMaxOpenConns(config.MaxOpenConnection)
-	sqlDb.SetConnMaxLifetime(config.ConnMaxLifetime)
+	sqlDb.SetMaxIdleConns(conf.maxIdleConnection)
+	sqlDb.SetMaxOpenConns(conf.maxOpenConnection)
+	sqlDb.SetConnMaxLifetime(conf.connMaxLifetime)
 
 	o, err := NewOrm(db, consts.MySql)
 	if err != nil {
