@@ -23,7 +23,7 @@ func (c Controllers) DeleteByID(ec echo.Context) error {
 
 	loginData := ec.Get(consts.XUserHeader).(token.Data)
 
-	if err := c.Usecases.Ponds.DeleteByID(ec.Request().Context(), id, loginData); err != nil {
+	if err := c.Usecases.Ponds.DeleteByID(ec.Request().Context(), id, loginData.CreatedBy()); err != nil {
 		return c.buildErrorDeleteByID(ec, err)
 	}
 

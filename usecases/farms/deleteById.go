@@ -2,11 +2,9 @@ package farmsUsecases
 
 import (
 	"context"
-
-	"github.com/naufalfmm/aquafarm-management-service/utils/token"
 )
 
-func (u usecases) DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error {
+func (u usecases) DeleteByID(ctx context.Context, id uint64, deletedBy string) error {
 	u.resources.MySql.StartTransaction(ctx)
 	defer u.resources.MySql.RollbackTransaction(ctx)
 
@@ -14,11 +12,11 @@ func (u usecases) DeleteByID(ctx context.Context, id uint64, loginDeleted token.
 		return err
 	}
 
-	if err := u.persistents.Repositories.Farms.DeleteByID(ctx, id, loginDeleted); err != nil {
+	if err := u.persistents.Repositories.Farms.DeleteByID(ctx, id, deletedBy); err != nil {
 		return err
 	}
 
-	if err := u.persistents.Repositories.Ponds.DeleteByFarmID(ctx, id, loginDeleted); err != nil {
+	if err := u.persistents.Repositories.Ponds.DeleteByFarmID(ctx, id, deletedBy); err != nil {
 		return err
 	}
 

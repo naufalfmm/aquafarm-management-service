@@ -11,7 +11,6 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	dao "github.com/naufalfmm/aquafarm-management-service/model/dao"
 	dto "github.com/naufalfmm/aquafarm-management-service/model/dto"
-	token "github.com/naufalfmm/aquafarm-management-service/utils/token"
 )
 
 // MockRepositories is a mock of Repositories interface.
@@ -53,31 +52,31 @@ func (mr *MockRepositoriesMockRecorder) Create(ctx, pond interface{}) *gomock.Ca
 }
 
 // DeleteByFarmID mocks base method.
-func (m *MockRepositories) DeleteByFarmID(ctx context.Context, farmID uint64, loginDeleted token.Data) error {
+func (m *MockRepositories) DeleteByFarmID(ctx context.Context, farmID uint64, deletedBy string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteByFarmID", ctx, farmID, loginDeleted)
+	ret := m.ctrl.Call(m, "DeleteByFarmID", ctx, farmID, deletedBy)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteByFarmID indicates an expected call of DeleteByFarmID.
-func (mr *MockRepositoriesMockRecorder) DeleteByFarmID(ctx, farmID, loginDeleted interface{}) *gomock.Call {
+func (mr *MockRepositoriesMockRecorder) DeleteByFarmID(ctx, farmID, deletedBy interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByFarmID", reflect.TypeOf((*MockRepositories)(nil).DeleteByFarmID), ctx, farmID, loginDeleted)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByFarmID", reflect.TypeOf((*MockRepositories)(nil).DeleteByFarmID), ctx, farmID, deletedBy)
 }
 
 // DeleteByID mocks base method.
-func (m *MockRepositories) DeleteByID(ctx context.Context, id uint64, loginDeleted token.Data) error {
+func (m *MockRepositories) DeleteByID(ctx context.Context, id uint64, deletedBy string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteByID", ctx, id, loginDeleted)
+	ret := m.ctrl.Call(m, "DeleteByID", ctx, id, deletedBy)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteByID indicates an expected call of DeleteByID.
-func (mr *MockRepositoriesMockRecorder) DeleteByID(ctx, id, loginDeleted interface{}) *gomock.Call {
+func (mr *MockRepositoriesMockRecorder) DeleteByID(ctx, id, deletedBy interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockRepositories)(nil).DeleteByID), ctx, id, loginDeleted)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByID", reflect.TypeOf((*MockRepositories)(nil).DeleteByID), ctx, id, deletedBy)
 }
 
 // GetAll mocks base method.
