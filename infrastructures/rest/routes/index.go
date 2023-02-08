@@ -29,7 +29,7 @@ func (r *Routes) Register(ec *echo.Echo) {
 	ec.Pre(r.Middlewares.RequestLogger(), r.Middlewares.RemoveTrailingSlash())
 	v1 := ec.Group("/v1")
 
-	farm := v1.Group("/farms", r.Middlewares.VerifyToken(), r.Middlewares.RequestStart())
+	farm := v1.Group("/farms", r.Middlewares.VerifyToken())
 	farm.GET("", r.Controllers.Farms.GetAllPaginated)
 	farm.POST("", r.Controllers.Farms.Create)
 	farm.DELETE("/:id", r.Controllers.Farms.DeleteByID)
@@ -38,13 +38,13 @@ func (r *Routes) Register(ec *echo.Echo) {
 	farm.POST("/:id/ponds", r.Controllers.Ponds.Create)
 	farm.PUT("/:id/ponds/:code", r.Controllers.Ponds.Upsert)
 
-	pond := v1.Group("/ponds", r.Middlewares.VerifyToken(), r.Middlewares.RequestStart())
+	pond := v1.Group("/ponds", r.Middlewares.VerifyToken())
 	pond.GET("", r.Controllers.Ponds.GetAllPaginated)
 	pond.POST("", r.Controllers.Ponds.Create)
 	pond.DELETE("/:id", r.Controllers.Ponds.DeleteByID)
 	pond.GET("/:id", r.Controllers.Ponds.GetByID)
 	pond.PUT("/:code", r.Controllers.Ponds.Upsert)
 
-	endpoint := v1.Group("/endpoints", r.Middlewares.VerifyToken(), r.Middlewares.RequestStart())
+	endpoint := v1.Group("/endpoints", r.Middlewares.VerifyToken())
 	endpoint.GET("/reports", r.Controllers.EndpointLogs.GetAllReports)
 }
