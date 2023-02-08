@@ -12,8 +12,7 @@ type (
 		PanicRecover() echo.MiddlewareFunc
 		ImplementCors() echo.MiddlewareFunc
 		VerifyToken() echo.MiddlewareFunc
-		RequestStart() echo.MiddlewareFunc
-		RequestEnd() echo.MiddlewareFunc
+		RequestLogger() echo.MiddlewareFunc
 	}
 
 	middlewares struct {

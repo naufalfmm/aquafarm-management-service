@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/naufalfmm/aquafarm-management-service/consts"
 )
 
 type (
@@ -23,22 +24,30 @@ type (
 	}
 )
 
-func NewJSONResponse(eCtx echo.Context, statusCode int, message string, data interface{}) error {
+func NewJSONResponse(ec echo.Context, statusCode int, message string, data interface{}) error {
 	if statusCode >= http.StatusBadRequest {
-		return eCtx.JSON(statusCode, Error{
+		resp := Error{
 			Default: Default{
 				Ok:      false,
 				Message: message,
 			},
 			Error: data.(error).Error(),
-		})
+		}
+
+		ec.Set(consts.ApiResponse, resp)
+
+		return ec.JSON(statusCode, resp)
 	}
 
-	return eCtx.JSON(statusCode, Success{
+	resp := Success{
 		Default: Default{
 			Ok:      true,
 			Message: "Success",
 		},
 		Data: data,
-	})
+	}
+
+	ec.Set(consts.ApiResponse, resp)
+
+	return ec.JSON(statusCode, resp)
 }

@@ -48,7 +48,7 @@ func (req *RecordRequestLogRequest) FromEchoContext(ec echo.Context) error {
 	req.IpAddress = ec.RealIP()
 	req.RequestedBy = ec.Get(consts.XUserHeader).(token.Data).CreatedBy()
 	req.ResponseStatusCode = ec.Response().Status
-	req.StartAt = ec.Get(consts.XRequestStartUnix).(int64)
+	req.StartAt = ec.Get(consts.XRequestStartUnixHeader).(int64)
 	req.EndAt = time.Now().UnixMilli()
 
 	return nil

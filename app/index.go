@@ -66,7 +66,7 @@ func Init() App {
 }
 
 func (app App) Run() {
-	app.Ec.Use(app.Middlewares.RequestEnd(), app.Middlewares.PanicRecover(), app.Middlewares.ImplementCors())
+	app.Ec.Use(app.Middlewares.PanicRecover(), app.Middlewares.ImplementCors())
 	app.Ec.Validator = app.Resources.Validator
 
 	app.Ec.GET("/", func(c echo.Context) error {
