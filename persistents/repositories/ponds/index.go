@@ -2,10 +2,15 @@ package pondsRepositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
 	"github.com/naufalfmm/aquafarm-management-service/model/dto"
 	"github.com/naufalfmm/aquafarm-management-service/resources"
+)
+
+var (
+	timeNow = time.Now
 )
 
 type (

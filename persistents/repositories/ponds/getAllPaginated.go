@@ -9,15 +9,17 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 )
 
+var (
+	sortMap = map[string][]string{
+		"code":        {"code"},
+		"createdDate": {"created_at"},
+	}
+)
+
 func (r repositories) GetAllPaginated(ctx context.Context, req dto.PondPagingRequest) (dao.PondsPagingResponse, error) {
 	var (
 		basePagingResp orm.BasePagingResponse
 		ponds          dao.Ponds
-
-		sortMap = map[string][]string{
-			"code":        {"code"},
-			"createdDate": {"created_at"},
-		}
 	)
 
 	if err := req.Filter.Apply(r.resources.MySql.GetDB().WithContext(ctx)).

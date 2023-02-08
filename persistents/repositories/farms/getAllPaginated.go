@@ -9,15 +9,17 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 )
 
+var (
+	sortMap = map[string][]string{
+		"code":        {"code"},
+		"createdDate": {"created_at"},
+	}
+)
+
 func (r repositories) GetAllPaginated(ctx context.Context, req dto.FarmPagingRequest) (dao.FarmsPagingResponse, error) {
 	var (
 		basePagingResp orm.BasePagingResponse
 		farms          dao.Farms
-
-		sortMap = map[string][]string{
-			"code":        {"code"},
-			"createdDate": {"created_at"},
-		}
 	)
 
 	if err := req.Filter.Apply(r.resources.MySql.GetDB().WithContext(ctx)).
@@ -25,7 +27,8 @@ func (r repositories) GetAllPaginated(ctx context.Context, req dto.FarmPagingReq
 		Paginate(ctx, orm.PaginateOptions{
 			Paging:       req.PagingRequest,
 			FieldSortMap: sortMap,
-		}, &basePagingResp, &farms).Error(); err != nil {
+		}, &basePagingResp, &farms).
+		Error(); err != nil {
 		r.resources.Logger.Error(ctx, "error when getting all paginated farms",
 			zapLog.SetAttribute("req", req),
 			zapLog.SetAttribute("error", err),
