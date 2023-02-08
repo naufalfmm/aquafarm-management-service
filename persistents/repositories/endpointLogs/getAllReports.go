@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
+	"github.com/naufalfmm/aquafarm-management-service/utils/logger/zapLog"
 )
 
 func (r repositories) GetAllReports(ctx context.Context) (dao.EndpointLogReports, error) {
@@ -34,6 +35,9 @@ func (r repositories) GetAllReports(ctx context.Context) (dao.EndpointLogReports
 		Group("endpoint_id").
 		Find(&data).
 		Error(); err != nil {
+		r.resources.Logger.Error(ctx, "error when getting all endpoint reports",
+			zapLog.SetAttribute("error", err),
+		)
 		return nil, err
 	}
 

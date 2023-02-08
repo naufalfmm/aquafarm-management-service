@@ -16,7 +16,10 @@ func (r repositories) GetByID(ctx context.Context, id uint64) (dao.Pond, error) 
 		Where("id", id).
 		Take(&pond).
 		Error(); err != nil {
-		r.resources.Logger.Error(ctx, "error when get by id", zapLog.SetAttribute("id", id), zapLog.SetAttribute("error", err))
+		r.resources.Logger.Error(ctx, "error when getting pond by id",
+			zapLog.SetAttribute("id", id),
+			zapLog.SetAttribute("error", err),
+		)
 		return dao.Pond{}, err
 	}
 

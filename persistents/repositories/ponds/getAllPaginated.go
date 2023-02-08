@@ -5,6 +5,7 @@ import (
 
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
 	"github.com/naufalfmm/aquafarm-management-service/model/dto"
+	"github.com/naufalfmm/aquafarm-management-service/utils/logger/zapLog"
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
 )
 
@@ -27,6 +28,10 @@ func (r repositories) GetAllPaginated(ctx context.Context, req dto.PondPagingReq
 			FieldSortMap: sortMap,
 		}, &basePagingResp, &ponds).
 		Error(); err != nil {
+		r.resources.Logger.Error(ctx, "error when getting all paginated ponds",
+			zapLog.SetAttribute("req", req),
+			zapLog.SetAttribute("error", err),
+		)
 		return dao.PondsPagingResponse{}, err
 	}
 

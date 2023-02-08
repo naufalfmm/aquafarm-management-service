@@ -78,8 +78,6 @@ func (m middlewares) logResponse(c echo.Context, err error) {
 		responseMsg += fmt.Sprintf("?%s", c.Request().URL.RawQuery)
 	}
 
-	fmt.Println("ERR LOG RESPONSE", err)
-
 	if err != nil {
 		m.Resources.Logger.Error(c.Request().Context(), responseMsg, zapLog.SetAttribute("error", err))
 	} else {

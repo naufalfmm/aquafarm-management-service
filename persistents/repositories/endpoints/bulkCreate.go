@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/naufalfmm/aquafarm-management-service/model/dao"
+	"github.com/naufalfmm/aquafarm-management-service/utils/logger/zapLog"
 )
 
 func (r repositories) BulkCreate(ctx context.Context, data dao.Endpoints) (dao.Endpoints, error) {
@@ -11,6 +12,10 @@ func (r repositories) BulkCreate(ctx context.Context, data dao.Endpoints) (dao.E
 		WithContext(ctx).
 		Create(&data).
 		Error(); err != nil {
+		r.resources.Logger.Error(ctx, "error when bulk creating endpoints",
+			zapLog.SetAttribute("endpoints", data),
+			zapLog.SetAttribute("error", err),
+		)
 		return nil, err
 	}
 
