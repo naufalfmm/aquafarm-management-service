@@ -42,6 +42,15 @@ func (o *orm) Clone() Orm {
 	}
 }
 
+func (o *orm) Ping() error {
+	db, err := o.g.DB()
+	if err != nil {
+		return err
+	}
+
+	return db.Ping()
+}
+
 func (o *orm) AddError(err error) error {
 	return o.g.AddError(err)
 }

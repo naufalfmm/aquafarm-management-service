@@ -12,6 +12,7 @@ type Orm interface {
 	Gorm() *gorm.DB
 	Error() error
 	Clone() Orm
+	Ping() error
 
 	Paginate(ctx context.Context, options PaginateOptions, pagingResp *BasePagingResponse, data interface{}) Orm
 
