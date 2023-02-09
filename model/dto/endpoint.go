@@ -41,7 +41,8 @@ func isValidEchoRoute(ecRoute *echo.Route) bool {
 	}
 
 	if strings.Contains(ecRoute.Name, consts.EndpointNameEchoLibrary) ||
-		strings.Contains(ecRoute.Name, consts.EndpointNameApp) {
+		strings.Contains(ecRoute.Name, consts.EndpointNameApp) ||
+		strings.Contains(ecRoute.Path, consts.DocsPath) {
 		return false
 	}
 
