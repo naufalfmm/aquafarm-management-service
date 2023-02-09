@@ -19,5 +19,5 @@ func (c Controllers) Create(ec echo.Context) error {
 		return generateResp.NewJSONResponse(ec, http.StatusInternalServerError, err.Error(), err)
 	}
 
-	return generateResp.NewJSONResponse(ec, http.StatusOK, "Success", dto.NewFarmResponse(farm))
+	return generateResp.NewJSONResponse(ec, http.StatusCreated, "Success", dto.NewFarmResponse(farm))
 }
