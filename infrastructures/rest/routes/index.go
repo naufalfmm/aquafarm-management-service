@@ -6,6 +6,9 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/middlewares"
 	"github.com/naufalfmm/aquafarm-management-service/resources"
 	"github.com/naufalfmm/aquafarm-management-service/usecases"
+
+	_ "github.com/naufalfmm/aquafarm-management-service/docs"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 type Routes struct {
@@ -47,4 +50,6 @@ func (r *Routes) Register(ec *echo.Echo) {
 
 	endpoint := v1.Group("/endpoints", r.Middlewares.VerifyToken())
 	endpoint.GET("/reports", r.Controllers.EndpointLogs.GetAllReports)
+
+	v1.GET("/docs/*", echoSwagger.WrapHandler)
 }

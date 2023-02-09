@@ -11,6 +11,20 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetFarmByID godoc
+//
+//	@Summary		Get farm data by id
+//	@Description	Get farm data by id
+//	@Security		JWT
+//	@Tags			Farms
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		uint64	true	"Farm ID"
+//	@Success		200	{object}	generateResp.Success{data=dto.FarmResponse,message=string,ok=bool}
+//	@Failure		400	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Failure		404	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Failure		500	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Router			/v1/farms/{id} [get]
 func (c Controllers) GetByID(ec echo.Context) error {
 	id, err := strconv.ParseUint(ec.Param("id"), 10, 64)
 	if err != nil {

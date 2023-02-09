@@ -13,7 +13,7 @@ import (
 
 type (
 	CreatePondRequest struct {
-		FarmID   uint64 `json:"farmId" param:"id" validate:"required_without=FarmCode"`
+		FarmID   uint64 `param:"id" json:"farmId" validate:"required_without=FarmCode"`
 		FarmCode string `json:"farmCode" validate:"required_without=FarmID"`
 
 		Code        string `json:"code" validate:"required"`

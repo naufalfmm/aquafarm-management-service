@@ -1,0 +1,1153 @@
+definitions:
+  dto.CreateFarmRequest:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      code:
+        type: string
+      description:
+        type: string
+      district:
+        type: string
+      latitude:
+        type: number
+      loginData: {}
+      longitude:
+        type: number
+      postalCode:
+        type: string
+      province:
+        type: string
+      village:
+        type: string
+    required:
+    - address
+    - city
+    - code
+    - description
+    - district
+    - loginData
+    - postalCode
+    - province
+    - village
+    type: object
+  dto.CreatePondRequest:
+    properties:
+      code:
+        type: string
+      depth:
+        type: number
+      description:
+        type: string
+      farmCode:
+        type: string
+      farmId:
+        type: integer
+      loginData: {}
+      long:
+        type: number
+      wide:
+        type: number
+    required:
+    - code
+    - depth
+    - description
+    - loginData
+    - long
+    - wide
+    type: object
+  dto.EndpointLogReportResponse:
+    properties:
+      count:
+        type: integer
+      request_time_average:
+        type: number
+      unique_ip_address:
+        type: integer
+      unique_user_agent:
+        type: integer
+    type: object
+  dto.EndpointLogReportResponseMap:
+    additionalProperties:
+      $ref: '#/definitions/dto.EndpointLogReportResponse'
+    type: object
+  dto.FarmPagingResponse:
+    properties:
+      count:
+        type: integer
+      currentPage:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/dto.FarmResponse'
+        type: array
+      limit:
+        type: integer
+      sorts:
+        items:
+          type: string
+        type: array
+      totalPage:
+        type: integer
+    type: object
+  dto.FarmResponse:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      code:
+        type: string
+      createdAt:
+        type: string
+      createdBy:
+        type: string
+      description:
+        type: string
+      district:
+        type: string
+      id:
+        type: integer
+      latitude:
+        type: number
+      longitude:
+        type: number
+      ponds:
+        items:
+          $ref: '#/definitions/dto.PondResponse'
+        type: array
+      postalCode:
+        type: string
+      province:
+        type: string
+      updatedAt:
+        type: string
+      updatedBy:
+        type: string
+      village:
+        type: string
+    type: object
+  dto.PondPagingResponse:
+    properties:
+      count:
+        type: integer
+      currentPage:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/dto.PondResponse'
+        type: array
+      limit:
+        type: integer
+      sorts:
+        items:
+          type: string
+        type: array
+      totalPage:
+        type: integer
+    type: object
+  dto.PondResponse:
+    properties:
+      code:
+        type: string
+      createdAt:
+        type: string
+      createdBy:
+        type: string
+      depth:
+        type: number
+      description:
+        type: string
+      farm:
+        $ref: '#/definitions/dto.FarmResponse'
+      farmId:
+        type: integer
+      id:
+        type: integer
+      long:
+        type: number
+      updatedAt:
+        type: string
+      updatedBy:
+        type: string
+      wide:
+        type: number
+    type: object
+  dto.UpsertFarmBodyRequest:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      description:
+        type: string
+      district:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+      postalCode:
+        type: string
+      province:
+        type: string
+      village:
+        type: string
+    required:
+    - address
+    - city
+    - description
+    - district
+    - postalCode
+    - province
+    - village
+    type: object
+  dto.UpsertPondRequest:
+    properties:
+      code:
+        type: string
+      depth:
+        type: number
+      description:
+        type: string
+      farmCode:
+        type: string
+      farmId:
+        type: integer
+      loginData: {}
+      long:
+        type: number
+      wide:
+        type: number
+    required:
+    - code
+    - depth
+    - description
+    - loginData
+    - long
+    - wide
+    type: object
+  generateResp.Error:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+      ok:
+        type: boolean
+    type: object
+  generateResp.Success:
+    properties:
+      data: {}
+      message:
+        type: string
+      ok:
+        type: boolean
+    type: object
+info:
+  contact: {}
+  description: This is prototype of aquafarm management service
+  title: Aquafarm Management Service
+  version: "1.0"
+paths:
+  /v1/endpoints/reports:
+    get:
+      consumes:
+      - application/json
+      description: Get reports for each endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.EndpointLogReportResponseMap'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Get reports for each endpoint
+      tags:
+      - Endpoints
+  /v1/farms:
+    get:
+      consumes:
+      - application/json
+      description: Get all farms with pagination and filter
+      parameters:
+      - description: Current Page
+        in: query
+        name: page
+        type: integer
+      - description: Count of farms each page
+        in: query
+        name: limit
+        type: integer
+      - description: the sorts key of farms sortation
+        in: query
+        name: sorts
+        type: string
+      - description: the farms search by code
+        in: query
+        name: code
+        type: string
+      - description: the farms search by village
+        in: query
+        name: village
+        type: string
+      - description: the farms search by district
+        in: query
+        name: district
+        type: string
+      - description: the farms search by city
+        in: query
+        name: city
+        type: string
+      - description: the farms search by province
+        in: query
+        name: province
+        type: string
+      - description: the farms search by postal code
+        in: query
+        name: postalCode
+        type: string
+      - description: the farm created date is filtered greather than or equal created
+          date start
+        format: time
+        in: query
+        name: createdDateStart
+        type: string
+      - description: the farm created date is filtered less than or equal created
+          date end
+        format: time
+        in: query
+        name: createdDateEnd
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.FarmPagingResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Get all paginated farms
+      tags:
+      - Farms
+    post:
+      consumes:
+      - application/json
+      description: Create new farm
+      parameters:
+      - description: Farm Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateFarmRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.FarmResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Create new farm
+      tags:
+      - Farms
+  /v1/farms/{code}:
+    put:
+      consumes:
+      - application/json
+      description: Update the farm if farm is exist or insert if farm is not exist
+      parameters:
+      - description: Farm Code
+        in: path
+        name: code
+        required: true
+        type: string
+      - description: Farm Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpsertFarmBodyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.FarmResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Update or insert farm
+      tags:
+      - Farms
+  /v1/farms/{farmID}/ponds:
+    post:
+      consumes:
+      - application/json
+      description: Create new pond
+      parameters:
+      - description: Farm ID
+        in: path
+        name: farmID
+        required: true
+        type: integer
+      - description: Pond Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePondRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.PondResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Create new pond
+      tags:
+      - Ponds
+  /v1/farms/{farmID}/ponds/{code}:
+    put:
+      consumes:
+      - application/json
+      description: Update the pond if pond is exist or insert if pond is not exist
+      parameters:
+      - description: Farm ID
+        in: path
+        name: farmID
+        required: true
+        type: integer
+      - description: Pond Code
+        in: path
+        name: code
+        required: true
+        type: string
+      - description: Pond Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpsertPondRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.PondResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Update or insert pond
+      tags:
+      - Ponds
+  /v1/farms/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete farm by id and ponds connected to farm id
+      parameters:
+      - description: Farm ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Delete farm by id
+      tags:
+      - Farms
+    get:
+      consumes:
+      - application/json
+      description: Get farm data by id
+      parameters:
+      - description: Farm ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.FarmResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Get farm data by id
+      tags:
+      - Farms
+  /v1/ponds:
+    get:
+      consumes:
+      - application/json
+      description: Get all ponds with pagination and filter
+      parameters:
+      - description: Current Page
+        in: query
+        name: page
+        type: integer
+      - description: Count of ponds each page
+        in: query
+        name: limit
+        type: integer
+      - description: the sorts key of ponds sortation
+        in: query
+        name: sorts
+        type: string
+      - description: the ponds search by code
+        in: query
+        name: code
+        type: string
+      - description: the pond created date is filtered greather than or equal created
+          date start
+        format: time
+        in: query
+        name: createdDateStart
+        type: string
+      - description: the pond created date is filtered less than or equal created
+          date end
+        format: time
+        in: query
+        name: createdDateEnd
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.PondPagingResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Get all paginated ponds
+      tags:
+      - Ponds
+    post:
+      consumes:
+      - application/json
+      description: Create new pond
+      parameters:
+      - description: Farm ID
+        in: path
+        name: farmID
+        required: true
+        type: integer
+      - description: Pond Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePondRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.PondResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Create new pond
+      tags:
+      - Ponds
+  /v1/ponds/{code}:
+    put:
+      consumes:
+      - application/json
+      description: Update the pond if pond is exist or insert if pond is not exist
+      parameters:
+      - description: Farm ID
+        in: path
+        name: farmID
+        required: true
+        type: integer
+      - description: Pond Code
+        in: path
+        name: code
+        required: true
+        type: string
+      - description: Pond Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpsertPondRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.PondResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Update or insert pond
+      tags:
+      - Ponds
+  /v1/ponds/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete pond by id and ponds connected to pond id
+      parameters:
+      - description: Pond ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Delete pond by id
+      tags:
+      - Ponds
+    get:
+      consumes:
+      - application/json
+      description: Get pond data by id
+      parameters:
+      - description: Pond ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Success'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.PondResponse'
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/generateResp.Error'
+            - properties:
+                error: {}
+                message:
+                  type: string
+                ok:
+                  type: boolean
+              type: object
+      security:
+      - JWT: []
+      summary: Get pond data by id
+      tags:
+      - Ponds
+securityDefinitions:
+  JWT:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -28,9 +28,7 @@ type (
 		LoginData token.Data `validate:"dive,required"`
 	}
 
-	UpsertFarmRequest struct {
-		Code string `param:"code" validate:"required"`
-
+	UpsertFarmBodyRequest struct {
 		Description string `json:"description" validate:"required"`
 		Address     string `json:"address" validate:"required"`
 		Village     string `json:"village" validate:"required"`
@@ -41,6 +39,12 @@ type (
 
 		Latitude  *float64 `json:"latitude" validate:"required_with=Longitude"`
 		Longitude *float64 `json:"longitude" validate:"required_with=Latitude"`
+	}
+
+	UpsertFarmRequest struct {
+		Code string `param:"code" validate:"required"`
+
+		UpsertFarmBodyRequest `validate:"required,dive,required"`
 
 		LoginData token.Data `validate:"dive,required"`
 	}

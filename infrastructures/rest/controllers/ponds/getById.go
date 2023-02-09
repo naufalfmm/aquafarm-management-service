@@ -11,6 +11,20 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetPondByID godoc
+//
+//	@Summary		Get pond data by id
+//	@Description	Get pond data by id
+//	@Security		JWT
+//	@Tags			Ponds
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		uint64	true	"Pond ID"
+//	@Success		200	{object}	generateResp.Success{data=dto.PondResponse,message=string,ok=bool}
+//	@Failure		400	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Failure		404	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Failure		500	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Router			/v1/ponds/{id} [get]
 func (c Controllers) GetByID(ec echo.Context) error {
 	id, err := strconv.ParseUint(ec.Param("id"), 10, 64)
 	if err != nil {

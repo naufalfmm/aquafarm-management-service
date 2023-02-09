@@ -46,10 +46,15 @@ func (req *RecordRequestLogRequest) FromEchoContext(ec echo.Context) error {
 	req.FullUri = ec.Request().RequestURI
 	req.UserAgent = ec.Request().UserAgent()
 	req.IpAddress = ec.RealIP()
-	req.RequestedBy = ec.Get(consts.XUserHeader).(token.Data).CreatedBy()
 	req.ResponseStatusCode = ec.Response().Status
 	req.StartAt = ec.Get(consts.XRequestStartUnixHeader).(int64)
 	req.EndAt = time.Now().UnixMilli()
+
+	req.RequestedBy = consts.SystemCreatedBy
+	tokenData, ok := ec.Get(consts.XUserHeader).(token.Data)
+	if ok {
+		req.RequestedBy = tokenData.CreatedBy()
+	}
 
 	return nil
 }

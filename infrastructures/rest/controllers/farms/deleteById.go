@@ -11,6 +11,19 @@ import (
 	"gorm.io/gorm"
 )
 
+// DeleteFarmByID godoc
+//	@Summary		Delete farm by id
+//	@Description	Delete farm by id and ponds connected to farm id
+//	@Security		JWT
+//	@Tags			Farms
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		uint64	true	"Farm ID"
+//	@Success		200	{object}	generateResp.Success{ok=bool,message=string}
+//	@Failure		400	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Failure		404	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Failure		500	{object}	generateResp.Error{ok=bool,message=string,error=error}
+//	@Router			/v1/farms/{id} [delete]
 func (c Controllers) DeleteByID(ec echo.Context) error {
 	id, err := strconv.ParseUint(ec.Param("id"), 10, 64)
 	if err != nil {
