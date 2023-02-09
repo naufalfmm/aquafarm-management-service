@@ -58,7 +58,7 @@ func cleanPath(path string) string {
 	return path
 }
 
-func (req *BulkUpsertEndpointsRequest) NewBulkUpsertEndpointsRequestFromEcho(ec echo.Echo) error {
+func (req *BulkUpsertEndpointsRequest) NewFromEcho(ec echo.Echo) error {
 	for _, ecRoute := range ec.Routes() {
 		if !isValidEchoRoute(ecRoute) {
 			continue
