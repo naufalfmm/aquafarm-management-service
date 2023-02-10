@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/naufalfmm/aquafarm-management-service/migrations/model"
 	"github.com/naufalfmm/aquafarm-management-service/migrations/resources"
@@ -22,7 +23,17 @@ func rollbackVersion(ctx context.Context, resources resources.Resources, wd stri
 		return model.MigrationLog{}, err
 	}
 
-	filePath := fmt.Sprintf("%s/sql/%s_%s_rollback.sql", wd, log.ID, log.Name)
+	wd, err := os.Getwd()
+	if err != nil {
+		return model.MigrationLog{}, err
+	}
+
+	sqlLocation := "/sql/"
+	if !strings.Contains(sqlLocation, "migrations") {
+		sqlLocation = "/migrations/sql/"
+	}
+
+	filePath := fmt.Sprintf("%s%s%s_%s_rollback.sql", wd, sqlLocation, log.ID, log.Name)
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		return model.MigrationLog{}, err
@@ -75,7 +86,7 @@ func rollback(resources resources.Resources) cli.ActionFunc {
 	}
 }
 
-func Rollback(resources.Resources) *cli.Command {
+func Rollback(resources resources.Resources) *cli.Command {
 	return &cli.Command{
 		Name:    "rollback",
 		Usage:   "rollback --version <version>",
@@ -87,6 +98,6 @@ func Rollback(resources.Resources) *cli.Command {
 				Required: true,
 			},
 		},
-		Action: func(ctx *cli.Context) error { return nil },
+		Action: rollback(resources),
 	}
 }

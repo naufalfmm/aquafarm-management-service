@@ -37,7 +37,12 @@ func migrate(resources resources.Resources) cli.ActionFunc {
 			return err
 		}
 
-		err = filepath.Walk(wd+"/sql/", func(p string, info fs.FileInfo, err error) error {
+		sqlLocation := "/sql/"
+		if !strings.Contains(sqlLocation, "migrations") {
+			sqlLocation = "/migrations/sql/"
+		}
+
+		err = filepath.Walk(wd+sqlLocation, func(p string, info fs.FileInfo, err error) error {
 			_, file := filepath.Split(p)
 			if file == "" {
 				return nil

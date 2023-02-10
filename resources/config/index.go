@@ -13,7 +13,8 @@ type EnvConfig struct {
 	ServiceName string `envconfig:"SERVICE_NAME" default:"Aquafarm Management Service" required:"true"`
 	ServicePort int    `envconfig:"SERVICE_PORT" default:"8090" required:"true"`
 
-	MySqlDbAddress         string        `envconfig:"MYSQL_DB_ADDRESS" required:"true"`
+	MySqlDbHost            string        `envconfig:"MYSQL_DB_HOST" required:"true"`
+	MySqlDbPort            string        `envconfig:"MYSQL_DB_PORT" required:"true"`
 	MySqlDbUsername        string        `envconfig:"MYSQL_DB_USERNAME" required:"true"`
 	MySqlDbPassword        string        `envconfig:"MYSQL_DB_PASSWORD" required:"true"`
 	MySqlDbName            string        `envconfig:"MYSQL_DB_NAME" required:"true"`

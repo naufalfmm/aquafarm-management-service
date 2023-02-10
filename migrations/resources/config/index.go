@@ -9,7 +9,8 @@ import (
 )
 
 type EnvConfig struct {
-	MySqlDbAddress  string `envconfig:"MYSQL_DB_ADDRESS" required:"true"`
+	MySqlDbHost     string `envconfig:"MYSQL_DB_HOST" required:"true"`
+	MySqlDbPort     string `envconfig:"MYSQL_DB_PORT" required:"true"`
 	MySqlDbUsername string `envconfig:"MYSQL_DB_USERNAME" required:"true"`
 	MySqlDbPassword string `envconfig:"MYSQL_DB_PASSWORD" required:"true"`
 	MySqlDbName     string `envconfig:"MYSQL_DB_NAME" required:"true"`

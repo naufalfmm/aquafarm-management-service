@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"github.com/naufalfmm/aquafarm-management-service/resources/config"
 	"github.com/naufalfmm/aquafarm-management-service/utils/logger"
 	"github.com/naufalfmm/aquafarm-management-service/utils/orm"
@@ -8,7 +10,7 @@ import (
 
 func NewMysql(config *config.EnvConfig, log logger.Logger) (*DB, error) {
 	confs := []orm.MysqlConfig{
-		orm.WithAddress(config.MySqlDbAddress),
+		orm.WithAddress(fmt.Sprintf("%s:%s", config.MySqlDbHost, config.MySqlDbPort)),
 		orm.WithUsernamePassword(config.MySqlDbUsername, config.MySqlDbPassword),
 		orm.WithDatabaseName(config.MySqlDbName),
 		orm.WithMaxIdleConnection(config.MySqlMaxIdleConnection),

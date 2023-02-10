@@ -24,7 +24,4 @@ func main() {
 	if err = app.Run(os.Args); err != nil {
 		reso.Logger.Error(context.Background(), "when running migration")
 	}
-
-	// fmt.Println(cmd.Migrate(context.Background(), reso))
-	// fmt.Println(cmd.Rollback(context.Background(), reso, "1675911133918"))
 }
