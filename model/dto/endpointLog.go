@@ -30,9 +30,9 @@ type (
 
 	EndpointLogReportResponse struct {
 		Count                  uint64  `json:"count"`
-		UserAgentDistinctCount uint64  `json:"unique_user_agent"`
-		IpAddressDistinctCount uint64  `json:"unique_ip_address"`
-		RequestTimeAverage     float64 `json:"request_time_average"`
+		UserAgentDistinctCount uint64  `json:"uniqueUserAgent"`
+		IpAddressDistinctCount uint64  `json:"uniqueIpAddress"`
+		RequestTimeAverage     float64 `json:"requestTimeAverage"`
 	}
 
 	EndpointLogReportResponseMap map[string]EndpointLogReportResponse
