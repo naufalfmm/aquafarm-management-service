@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
@@ -14,6 +15,9 @@ type EnvConfig struct {
 	MySqlDbUsername string `envconfig:"MYSQL_DB_USERNAME" required:"true"`
 	MySqlDbPassword string `envconfig:"MYSQL_DB_PASSWORD" required:"true"`
 	MySqlDbName     string `envconfig:"MYSQL_DB_NAME" required:"true"`
+
+	MySqlRetry     int           `envconfig:"MYSQL_RETRY" default:"3"`
+	MySqlWaitSleep time.Duration `envconfig:"MYSQL_WAIT_SLEEP" default:"1s"`
 }
 
 func NewConfig() (*EnvConfig, error) {

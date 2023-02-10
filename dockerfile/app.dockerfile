@@ -12,7 +12,6 @@ RUN xz -d -c /usr/local/upx-3.94-amd64_linux.tar.xz | \
 
 WORKDIR /go/src/github.com/naufalfmm/aquafarm-management-service
 COPY go.mod go.sum ./
-COPY .env.example .env
 
 RUN GO111MODULE=on go mod download
 

@@ -16,6 +16,7 @@ func NewMysql(config *config.EnvConfig, log logger.Logger) (*DB, error) {
 		orm.WithMaxIdleConnection(config.MySqlMaxIdleConnection),
 		orm.WithMaxOpenConnection(config.MySqlMaxOpenConnection),
 		orm.WithConnMaxLifetime(config.MySqlConnMaxLifetime),
+		orm.WithRetry(config.MySqlRetry, config.MySqlWaitSleep),
 	}
 
 	if config.MySqlLogMode {

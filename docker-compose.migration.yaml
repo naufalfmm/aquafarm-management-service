@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  aquafarm-management-service-migration:
+    image: naufalfmm/aquafarm-management-service-migration:latest
+    build:
+      context: .
+      dockerfile: dockerfile/migration.dockerfile
+    env_file: .env
+    container_name: "aquafarm-management-service-migration"
+    working_dir: /usr/src

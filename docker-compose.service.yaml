@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  aquafarm-management-service:
+    image: naufalfmm/aquafarm-management-service:latest
+    build:
+      context: .
+      dockerfile: dockerfile/app.dockerfile
+    env_file: .env
+    container_name: "aquafarm-management-service"
+    working_dir: /usr/src
+    ports:
+      - ${SERVICE_PORT}:${SERVICE_PORT}

@@ -1,6 +1,8 @@
 package orm
 
 import (
+	"time"
+
 	"github.com/naufalfmm/aquafarm-management-service/consts"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -16,7 +18,20 @@ func NewMysql(configs ...MysqlConfig) (Orm, error) {
 		config.Apply(&conf)
 	}
 
-	db, err := gorm.Open(mysql.Open(conf.generateURI()), conf.ToGormConfig())
+	var (
+		db *gorm.DB
+	)
+
+	gormConf := conf.ToGormConfig()
+	for i := 0; i < conf.retry; i++ {
+		db, err = gorm.Open(mysql.Open(conf.generateURI()), gormConf)
+		if err == nil {
+			break
+		}
+
+		time.Sleep(conf.waitSleep)
+	}
+
 	if err != nil {
 		return nil, err
 	}

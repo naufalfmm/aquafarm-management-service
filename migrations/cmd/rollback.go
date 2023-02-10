@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -10,9 +11,27 @@ import (
 	"github.com/naufalfmm/aquafarm-management-service/migrations/model"
 	"github.com/naufalfmm/aquafarm-management-service/migrations/resources"
 	"github.com/urfave/cli/v2"
+	"gorm.io/gorm"
 )
 
-func rollbackVersion(ctx context.Context, resources resources.Resources, wd string) (model.MigrationLog, error) {
+func isTargetVersionExist(ctx context.Context, resources resources.Resources, targetVersion string) (bool, error) {
+	if targetVersion == "" {
+		return true, nil
+	}
+
+	var count int64
+	if err := resources.MySql.WithContext(ctx).
+		Model(&model.MigrationLog{}).
+		Where("id", targetVersion).
+		Count(&count).
+		Error(); err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
+func rollbackVersion(ctx context.Context, resources resources.Resources) (model.MigrationLog, error) {
 	var (
 		log model.MigrationLog
 	)
@@ -20,6 +39,10 @@ func rollbackVersion(ctx context.Context, resources resources.Resources, wd stri
 		Order("id DESC").
 		Take(&log).
 		Error(); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return model.MigrationLog{}, nil
+		}
+
 		return model.MigrationLog{}, err
 	}
 
@@ -57,26 +80,30 @@ func rollbackVersion(ctx context.Context, resources resources.Resources, wd stri
 
 func rollback(resources resources.Resources) cli.ActionFunc {
 	return func(ctx *cli.Context) error {
-		ver := ctx.String("version")
-
 		if err := checkConnection(ctx.Context, resources); err != nil {
 			return err
+		}
+
+		ver := ctx.String("version")
+
+		isExist, err := isTargetVersionExist(ctx.Context, resources, ver)
+		if err != nil {
+			return err
+		}
+
+		if !isExist {
+			return nil
 		}
 
 		resources.MySql.Begin()
 		defer resources.MySql.Rollback()
 
-		wd, err := os.Getwd()
+		log, err := rollbackVersion(ctx.Context, resources)
 		if err != nil {
 			return err
 		}
-
-		log, err := rollbackVersion(ctx.Context, resources, wd)
-		if err != nil {
-			return err
-		}
-		for log.ID != ver {
-			log, err = rollbackVersion(ctx.Context, resources, wd)
+		for log.ID != ver && log.ID != "" {
+			log, err = rollbackVersion(ctx.Context, resources)
 			if err != nil {
 				return err
 			}
@@ -95,7 +122,7 @@ func Rollback(resources resources.Resources) *cli.Command {
 			&cli.StringFlag{
 				Name:     "version",
 				Aliases:  []string{"v"},
-				Required: true,
+				Required: false,
 			},
 		},
 		Action: rollback(resources),

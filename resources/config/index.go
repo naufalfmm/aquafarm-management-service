@@ -25,6 +25,9 @@ type EnvConfig struct {
 	MySqlLogMode          bool          `envconfig:"MYSQL_LOG_MODE" default:"false"`
 	MySqlLogSlowThreshold time.Duration `envconfig:"MYSQL_LOG_SLOW_THRESHOLD"`
 
+	MySqlRetry     int           `envconfig:"MYSQL_RETRY" default:"3"`
+	MySqlWaitSleep time.Duration `envconfig:"MYSQL_WAIT_SLEEP" default:"1s"`
+
 	JwtPublicKey string `envconfig:"JWT_PUBLIC_KEY" required:"true"`
 	JwtAlg       string `envconfig:"JWT_ALG" required:"true" default:"HS256"`
 }

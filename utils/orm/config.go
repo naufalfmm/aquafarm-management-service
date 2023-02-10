@@ -23,6 +23,9 @@ type (
 		logger           Logger
 		logMode          bool
 		logSlowThreshold time.Duration
+
+		retry     int
+		waitSleep time.Duration
 	}
 
 	MysqlConfig interface {
@@ -182,4 +185,18 @@ func (w withLog) Apply(c *mysqlConfig) {
 
 func WithLog(logger Logger, slowThreshold time.Duration) MysqlConfig {
 	return withLog{logger, slowThreshold}
+}
+
+type withRetry struct {
+	retry     int
+	waitSleep time.Duration
+}
+
+func (w withRetry) Apply(c *mysqlConfig) {
+	c.retry = w.retry
+	c.waitSleep = w.waitSleep
+}
+
+func WithRetry(retry int, waitSleep time.Duration) MysqlConfig {
+	return withRetry{retry, waitSleep}
 }
