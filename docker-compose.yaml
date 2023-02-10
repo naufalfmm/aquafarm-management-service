@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    env_file: .env
+    environment:
+      MYSQL_ROOT_USER: ${MYSQL_DB_USERNAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+      MYSQL_TCP_PORT: ${MYSQL_DB_PORT}
+    ports:
+      - ${MYSQL_DB_PORT}:${MYSQL_DB_PORT}
+  
+  aquafarm-management-service:
+    image: naufalfmm/aquafarm-management-service:latest
+    build:
+      context: .
+      dockerfile: dockerfile/app.docker
+    env_file: .env
+    container_name: "aquafarm-management-service"
+    working_dir: /usr/src
+    ports:
+      - ${SERVICE_PORT}:${SERVICE_PORT}
