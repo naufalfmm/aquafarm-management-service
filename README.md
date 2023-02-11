@@ -95,8 +95,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (404)
@@ -153,8 +153,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (500)
@@ -178,8 +178,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (404)
@@ -223,8 +223,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (404)
@@ -280,8 +280,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (404)
@@ -347,8 +347,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (404)
@@ -399,17 +399,9 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
-
-#### Response (400)
-{
-    "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
-}
-
 
 #### Response (500)
 {
@@ -432,8 +424,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (404)
@@ -474,8 +466,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (404)
@@ -526,8 +518,8 @@ example: `?sorts=createdDate,-code`
 #### Response (400)
 {
     "ok": false,
-    "message": "Record Not Found",
-    "error": "Record Not Found"
+    "message": "Bad Request",
+    "error": "Bad Request"
 }
 
 #### Response (404)
