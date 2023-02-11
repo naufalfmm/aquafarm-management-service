@@ -16,7 +16,7 @@ COPY go.mod go.sum ./
 # install modules
 RUN GO111MODULE=on go mod download
 
-COPY ./migrations/. ./migrations/.
-COPY ./consts/. ./consts/.
-COPY ./utils/. ./utils/.
+COPY /migrations/. ./migrations/.
+COPY /consts/. ./consts/.
+COPY /utils/. ./utils/.
 COPY .env .env

@@ -10,7 +10,6 @@ import (
 )
 
 func NewMysql(config *config.EnvConfig, log logger.Logger) (orm.Orm, error) {
-	fmt.Println(fmt.Sprintf("%s:%s", config.MySqlDbHost, config.MySqlDbPort))
 	return orm.NewMysql([]orm.MysqlConfig{
 		orm.WithAddress(fmt.Sprintf("%s:%s", config.MySqlDbHost, config.MySqlDbPort)),
 		orm.WithUsernamePassword(config.MySqlDbUsername, config.MySqlDbPassword),

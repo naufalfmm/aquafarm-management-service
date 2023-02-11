@@ -4,6 +4,10 @@
 
 This is prototype of aquafarm management system
 
+## Prerequisities
+1. Docker
+2. Golang >=1.19
+
 ## How To Run
 1. Create env file
     - Create the env file by copy the example
