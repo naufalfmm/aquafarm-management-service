@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/naufalfmm/aquafarm-management-service/consts"
 	"github.com/naufalfmm/aquafarm-management-service/utils/token"
 )
